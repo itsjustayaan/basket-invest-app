@@ -3,7 +3,6 @@ package com.working.model;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,17 +11,15 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "Stock")
-public class Stock {
+@Table(name = "Admin")
+public class Admin {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int stockId;
+    private int adminId;
 
-    @Column(name = "stock_name")
-    private String stockName;
+    private String adminName;
+    private String adminEmail;
 
-    @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BasketAndStock> basketStocks;
 }
 

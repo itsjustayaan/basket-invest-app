@@ -1,25 +1,33 @@
 package com.working.model;
 
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table
+@Table(name = "InvestmentAdvisor")
 public class InvestmentAdvisor {
-	
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int iaId;
-	
-	@Column
-	private String iaEmail;
-	
-	@Column
-	private String iaPassword;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int iaId;
+    
+    @Column
+    private String iaEmail;
+    
+    @Column
+    private String iaPassword;
+    
+    @OneToMany(mappedBy = "investmentAdvisor", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Basket> baskets;
+
 	
 //	public InvestmentAdvisor() {
 //		

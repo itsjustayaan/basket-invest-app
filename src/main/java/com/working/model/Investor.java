@@ -1,66 +1,32 @@
 package com.working.model;
 
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table
+@Table(name = "Investor")
 public class Investor {
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int i_Id;
-	
-	@Column
-	private String iEmail;
-	
-	@Column
-	private String iPassword;
-	
-	@Column
-	private double iBalance;
-	
-	public Investor(int i_Id, String iEmail, String iPassword, double iBalance) {
-		super();
-		this.i_Id = i_Id;
-		this.iEmail = iEmail;
-		this.iPassword = iPassword;
-		this.iBalance = iBalance;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int investorId;
 
-	public int getI_Id() {
-		return i_Id;
-	}
+    @Column(name = "investor_name")
+    private String investorName;
 
-	public void setI_Id(int i_Id) {
-		this.i_Id = i_Id;
-	}
+    @Column(name = "investor_email")
+    private String investorEmail;
 
-	public String getiEmail() {
-		return iEmail;
-	}
+    @OneToMany(mappedBy = "investor", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<InvestorAndBasket> investorBaskets; // Reference to join table for Investor & Basket
 
-	public void setiEmail(String iEmail) {
-		this.iEmail = iEmail;
-	}
-
-	public String getiPassword() {
-		return iPassword;
-	}
-
-	public void setiPassword(String iPassword) {
-		this.iPassword = iPassword;
-	}
-
-	public double getiBalance() {
-		return iBalance;
-	}
-
-	public void setiBalance(double iBalance) {
-		this.iBalance = iBalance;
-	}
 }
+

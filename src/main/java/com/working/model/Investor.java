@@ -13,54 +13,67 @@ public class Investor {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int i_Id;
+	private int investorId;
 	
 	@Column
-	private String iEmail;
+	private String investorName;
 	
 	@Column
-	private String iPassword;
+	private String investorEmail;
 	
 	@Column
-	private double iBalance;
+	private String investorPassword;
 	
-	public Investor(int i_Id, String iEmail, String iPassword, double iBalance) {
+	@Column
+	private double investorBalance;
+
+	public Investor(int investorId, String investorName, String investorEmail, String investorPassword,
+			double investorBalance) {
 		super();
-		this.i_Id = i_Id;
-		this.iEmail = iEmail;
-		this.iPassword = iPassword;
-		this.iBalance = iBalance;
+		this.investorId = investorId;
+		this.investorName = investorName;
+		this.investorEmail = investorEmail;
+		this.investorPassword = investorPassword;
+		this.investorBalance = investorBalance;
 	}
 
-	public int getI_Id() {
-		return i_Id;
+	public int getInvestorId() {
+		return investorId;
 	}
 
-	public void setI_Id(int i_Id) {
-		this.i_Id = i_Id;
+	public void setInvestorId(int investorId) {
+		this.investorId = investorId;
 	}
 
-	public String getiEmail() {
-		return iEmail;
+	public String getInvestorName() {
+		return investorName;
 	}
 
-	public void setiEmail(String iEmail) {
-		this.iEmail = iEmail;
+	public void setInvestorName(String investorName) {
+		this.investorName = investorName;
 	}
 
-	public String getiPassword() {
-		return iPassword;
+	public String getInvestorEmail() {
+		return investorEmail;
 	}
 
-	public void setiPassword(String iPassword) {
-		this.iPassword = iPassword;
+	public void setInvestorEmail(String investorEmail) {
+		this.investorEmail = investorEmail;
 	}
 
-	public double getiBalance() {
-		return iBalance;
+	public String getInvestorPassword() {
+		return investorPassword;
 	}
 
-	public void setiBalance(double iBalance) {
-		this.iBalance = iBalance;
+	public void setInvestorPassword(String investorPassword) {
+		this.investorPassword = investorPassword;
+	}
+
+	public double getInvestorBalance() {
+		return investorBalance;
+	}
+
+	public void setInvestorBalance(double investorBalance) {
+		this.investorBalance = investorBalance;
 	}
 }

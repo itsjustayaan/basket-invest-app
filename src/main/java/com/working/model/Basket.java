@@ -2,14 +2,15 @@ package com.working.model;
 
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -20,20 +21,31 @@ public class Basket {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int basketId;
 	
-	@JoinTable(name="InvestmentAdvisor", joinColumns=@JoinColumn(name="iaId"))
-	private int iaId;
+	@Column
 	private String basketName;
+	
+	@Column
 	private String basketSummary;
 	
-	@OneToMany(mappedBy = "basket", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
-	private List<Stock> stockList;
+	@ManyToOne
+	@JoinColumn(name="fk_iaId")
+	private InvestmentAdvisor investmentAdvisor;
 	
-	public Basket(int basketId, int iaId, String basketName, String basketSummary, List<Stock> stockList) {
+	@ManyToMany
+	@JoinTable(
+			name="Basket_and_Stock",
+			joinColumns=@JoinColumn(name="basketId"),
+			inverseJoinColumns=@JoinColumn(name="stockId")
+			)
+	private List<Stock> stockList;
+
+	public Basket(int basketId, String basketName, String basketSummary, InvestmentAdvisor investmentAdvisor,
+			List<Stock> stockList) {
 		super();
 		this.basketId = basketId;
-		this.iaId = iaId;
 		this.basketName = basketName;
 		this.basketSummary = basketSummary;
+		this.investmentAdvisor = investmentAdvisor;
 		this.stockList = stockList;
 	}
 
@@ -43,14 +55,6 @@ public class Basket {
 
 	public void setBasketId(int basketId) {
 		this.basketId = basketId;
-	}
-
-	public int getIaId() {
-		return iaId;
-	}
-
-	public void setIaId(int iaId) {
-		this.iaId = iaId;
 	}
 
 	public String getBasketName() {
@@ -69,11 +73,19 @@ public class Basket {
 		this.basketSummary = basketSummary;
 	}
 
+	public InvestmentAdvisor getInvestmentAdvisor() {
+		return investmentAdvisor;
+	}
+
+	public void setInvestmentAdvisor(InvestmentAdvisor investmentAdvisor) {
+		this.investmentAdvisor = investmentAdvisor;
+	}
+
 	public List<Stock> getStockList() {
 		return stockList;
 	}
 
 	public void setStockList(List<Stock> stockList) {
 		this.stockList = stockList;
-	}
+	}	
 }

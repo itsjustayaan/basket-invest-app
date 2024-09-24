@@ -1,14 +1,16 @@
 package com.working.model;
 
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.OneToMany;
 
 @Entity
-@Table
 public class InvestmentAdvisor {
 	
 	@Id
@@ -16,18 +18,24 @@ public class InvestmentAdvisor {
 	private int iaId;
 	
 	@Column
+	private String iaName;
+	
+	@Column
 	private String iaEmail;
 	
 	@Column
 	private String iaPassword;
 	
-//	public InvestmentAdvisor() {
-//		
-//	}
+	@Column
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="investmentAdvisor")
+	private List<Basket> basketList;
 	
-	public InvestmentAdvisor(int ia_Id, String ia_Email, String ia_Password) {
+	protected InvestmentAdvisor() {
+		
+	}
+	
+	public InvestmentAdvisor(String ia_Email, String ia_Password) {
 		super();
-		this.iaId = ia_Id;
 		this.iaEmail = ia_Email;
 		this.iaPassword = ia_Password;
 	}

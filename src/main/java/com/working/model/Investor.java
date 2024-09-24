@@ -1,10 +1,14 @@
 package com.working.model;
 
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -26,6 +30,9 @@ public class Investor {
 	
 	@Column
 	private double investorBalance;
+	
+	@ManyToMany(cascade=CascadeType.ALL, mappedBy="investorList")
+	private List<Basket> basketList;
 
 	public Investor(int investorId, String investorName, String investorEmail, String investorPassword,
 			double investorBalance) {

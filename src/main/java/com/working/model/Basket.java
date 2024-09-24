@@ -38,6 +38,16 @@ public class Basket {
 			inverseJoinColumns=@JoinColumn(name="stockId")
 			)
 	private List<Stock> stockList;
+	
+	@ManyToMany
+	@JoinTable(
+			name="Basket_and_Investor",
+			joinColumns=@JoinColumn(name="basketId"),
+			inverseJoinColumns=@JoinColumn(name="investorId")
+			)
+	private List<Investor> investorList;
+	
+	
 
 	public Basket(int basketId, String basketName, String basketSummary, InvestmentAdvisor investmentAdvisor,
 			List<Stock> stockList) {

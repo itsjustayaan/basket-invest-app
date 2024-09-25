@@ -1,0 +1,6 @@
+drop table basket_and_stock;
+drop table stock;
+drop table basket_and_investor;
+drop table basket;
+drop table investment_advisor;
+drop table investor;

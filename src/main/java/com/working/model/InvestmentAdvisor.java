@@ -17,13 +17,13 @@ public class InvestmentAdvisor {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int iaId;
 	
-	@Column
+	@Column(nullable=false)
 	private String iaName;
 	
-	@Column
+	@Column(nullable=false)
 	private String iaEmail;
 	
-	@Column
+	@Column(nullable=false)
 	private String iaPassword;
 	
 	@Column
@@ -38,6 +38,24 @@ public class InvestmentAdvisor {
 		super();
 		this.iaEmail = ia_Email;
 		this.iaPassword = ia_Password;
+	}
+
+	
+	
+	public String getIaName() {
+		return iaName;
+	}
+
+	public void setIaName(String iaName) {
+		this.iaName = iaName;
+	}
+
+	public List<Basket> getBasketList() {
+		return basketList;
+	}
+
+	public void setBasketList(List<Basket> basketList) {
+		this.basketList = basketList;
 	}
 
 	public int getIaId() {

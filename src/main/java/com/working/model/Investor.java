@@ -33,7 +33,9 @@ public class Investor {
 	
 	@ManyToMany(cascade=CascadeType.ALL, mappedBy="investorList")
 	private List<Basket> basketList;
-
+	
+	public Investor() {}
+	
 	public Investor(int investorId, String investorName, String investorEmail, String investorPassword,
 			double investorBalance) {
 		super();

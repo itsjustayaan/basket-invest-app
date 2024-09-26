@@ -1,6 +1,7 @@
-package com.working.services;
+package com.working.services.InvestmentAdvisor;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,18 +48,23 @@ public class InvestmentAdvisorServiceImpl implements InvestmentAdvisorService{
 			return new ResponseEntity<>("Investment Advisor with this ID doesn't exist",HttpStatus.CONFLICT);
 		}
 		else {
-			investmentAdvisorDAO.save(investmentAdvisor);
-			return new ResponseEntity<>("Investment Advisor with ID Updated",HttpStatus.CREATED);
+			Optional<InvestmentAdvisor> iaTemp = investmentAdvisorDAO.findById(investmentAdvisor.getIaId());
+			if(iaTemp.get().getIaName().equals(investmentAdvisor.getIaName())) {
+				investmentAdvisorDAO.save(investmentAdvisor);
+				return new ResponseEntity<>("Investment Advisor with ID Updated",HttpStatus.CREATED);
+			}
+			else
+			return new ResponseEntity<>("Illegal operation: Name Miss match",HttpStatus.NOT_ACCEPTABLE);
 		}
 	}
 
 	@Override
 	public ResponseEntity<String> deleteInvestmentAdvisor(int iaId) {
-		if(investmentAdvisorDAO.findById(iaId) == null) {
-			return new ResponseEntity<>("Investment Advisor with this ID doesn't exist",HttpStatus.CONFLICT);
+		if(investmentAdvisorDAO.existsById(iaId)) {
+			investmentAdvisorDAO.deleteById(iaId);
+			return new ResponseEntity<>("Investor with this ID has been deleted",HttpStatus.OK);
 		}
-		investmentAdvisorDAO.deleteById(iaId);
-		return new ResponseEntity<>("Investment Advisor with this ID has been deleted",HttpStatus.OK);
+		return new ResponseEntity<>("Investor with this ID doesn't exist",HttpStatus.CONFLICT);
 	}
 
 	@Override

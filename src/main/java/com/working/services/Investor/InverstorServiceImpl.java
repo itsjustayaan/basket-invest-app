@@ -4,15 +4,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.working.dao.InvestorDAO;
-import com.working.model.InvestmentAdvisor;
 import com.working.model.Investor;
-import com.working.services.InvestmentAdvisor.InvestmentAdvisorService;
 
 @Service
 public class InverstorServiceImpl implements InvestorService{

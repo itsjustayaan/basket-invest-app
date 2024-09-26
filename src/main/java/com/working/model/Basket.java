@@ -19,6 +19,7 @@ public class Basket {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="basket_id")
 	private int basketId;
 	
 	@Column
@@ -47,7 +48,10 @@ public class Basket {
 			)
 	private List<Investor> investorList;
 	
-	
+	// Can Replace The One Above
+    @OneToMany(mappedBy = "basket", cascade = CascadeType.ALL)
+    private List<InvestorAndBasket> investorAndBasketList;
+
 
 	public Basket(int basketId, String basketName, String basketSummary, InvestmentAdvisor investmentAdvisor,
 			List<Stock> stockList) {

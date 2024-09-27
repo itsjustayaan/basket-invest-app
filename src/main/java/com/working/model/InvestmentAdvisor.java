@@ -34,8 +34,9 @@ public class InvestmentAdvisor {
 		
 	}
 	
-	public InvestmentAdvisor(String ia_Email, String ia_Password) {
+	public InvestmentAdvisor(String iaName, String ia_Email, String ia_Password) {
 		super();
+		this.iaName=iaName;
 		this.iaEmail = ia_Email;
 		this.iaPassword = ia_Password;
 	}

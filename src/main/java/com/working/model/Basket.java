@@ -2,6 +2,7 @@ package com.working.model;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -19,6 +21,7 @@ public class Basket {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="basket_id")
 	private int basketId;
 	
 	@Column
@@ -31,32 +34,33 @@ public class Basket {
 	@JoinColumn(name="fk_iaId")
 	private InvestmentAdvisor investmentAdvisor;
 	
-	@ManyToMany
-	@JoinTable(
-			name="Basket_and_Stock",
-			joinColumns=@JoinColumn(name="basketId"),
-			inverseJoinColumns=@JoinColumn(name="stockId")
-			)
-	private List<Stock> stockList;
+    @OneToMany(mappedBy = "basket", cascade = CascadeType.ALL)
+    private List<BasketAndStock> basketStockList;
 	
-	@ManyToMany
-	@JoinTable(
-			name="Basket_and_Investor",
-			joinColumns=@JoinColumn(name="basketId"),
-			inverseJoinColumns=@JoinColumn(name="investorId")
-			)
-	private List<Investor> investorList;
+//	@ManyToMany
+//	@JoinTable(
+//			name="Basket_and_Stock",
+//			joinColumns=@JoinColumn(name="basketId"),
+//			inverseJoinColumns=@JoinColumn(name="isin")
+//			)
+//	private List<Stock> stockList;
 	
-	
+// 	@ManyToMany
+// 	@JoinTable(
+// 			name="Basket_and_Investor",
+// 			joinColumns=@JoinColumn(name="basketId"),
+// 			inverseJoinColumns=@JoinColumn(name="investorId")
+// 			)
+// 	private List<Investor> investorList;
+  
+    @OneToMany(mappedBy = "basket", cascade = CascadeType.ALL)
+    private List<InvestorAndBasket> investorAndBasketList;
 
-	public Basket(int basketId, String basketName, String basketSummary, InvestmentAdvisor investmentAdvisor,
-			List<Stock> stockList) {
-		super();
-		this.basketId = basketId;
-		this.basketName = basketName;
-		this.basketSummary = basketSummary;
-		this.investmentAdvisor = investmentAdvisor;
-		this.stockList = stockList;
+	public Basket(String basketName, String basketSummary, InvestmentAdvisor investmentAdvisor) {
+	super();
+	this.basketName = basketName;
+	this.basketSummary = basketSummary;
+	this.investmentAdvisor = investmentAdvisor;
 	}
 
 	public int getBasketId() {
@@ -91,11 +95,19 @@ public class Basket {
 		this.investmentAdvisor = investmentAdvisor;
 	}
 
-	public List<Stock> getStockList() {
-		return stockList;
+	public List<BasketAndStock> getBasketStockList() {
+		return basketStockList;
 	}
 
-	public void setStockList(List<Stock> stockList) {
-		this.stockList = stockList;
-	}	
+	public void setBasketStockList(List<BasketAndStock> basketStockList) {
+		this.basketStockList = basketStockList;
+	}
+
+	public List<Investor> getInvestorList() {
+		return investorList;
+	}
+
+	public void setInvestorList(List<Investor> investorList) {
+		this.investorList = investorList;
+	}
 }

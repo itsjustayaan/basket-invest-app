@@ -21,6 +21,7 @@ public class Basket {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="basket_id")
 	private int basketId;
 	
 	@Column
@@ -44,13 +45,16 @@ public class Basket {
 //			)
 //	private List<Stock> stockList;
 	
-	@ManyToMany
-	@JoinTable(
-			name="Basket_and_Investor",
-			joinColumns=@JoinColumn(name="basketId"),
-			inverseJoinColumns=@JoinColumn(name="investorId")
-			)
-	private List<Investor> investorList;
+// 	@ManyToMany
+// 	@JoinTable(
+// 			name="Basket_and_Investor",
+// 			joinColumns=@JoinColumn(name="basketId"),
+// 			inverseJoinColumns=@JoinColumn(name="investorId")
+// 			)
+// 	private List<Investor> investorList;
+  
+    @OneToMany(mappedBy = "basket", cascade = CascadeType.ALL)
+    private List<InvestorAndBasket> investorAndBasketList;
 
 	public Basket(String basketName, String basketSummary, InvestmentAdvisor investmentAdvisor) {
 	super();

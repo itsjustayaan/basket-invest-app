@@ -1,4 +1,5 @@
 package com.working.model;
+ 
 
 import java.util.List;
 
@@ -8,7 +9,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -17,6 +20,7 @@ public class Investor {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "investor_id" )
 	private int investorId;
 	
 	@Column
@@ -34,6 +38,9 @@ public class Investor {
 	@ManyToMany(cascade=CascadeType.ALL, mappedBy="investorList")
 	private List<Basket> basketList;
 	
+	// Can Replace The One Above
+    @OneToMany(mappedBy = "investor", cascade = CascadeType.ALL)
+    private List<InvestorAndBasket> investorAndBasketList;	
 	public Investor() {}
 	
 	public Investor(int investorId, String investorName, String investorEmail, String investorPassword,

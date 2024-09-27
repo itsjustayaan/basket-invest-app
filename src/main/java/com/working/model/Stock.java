@@ -5,8 +5,6 @@ import java.util.List;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
@@ -16,32 +14,44 @@ import jakarta.persistence.Table;
 public class Stock {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int stockId;
+//	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private String isin;
 	
 	@Column
 	private String stockName;
 	
 	@Column
+	private String industry;
+	
+	@Column
 	private String stockSymbol;
 	
-	@ManyToMany(cascade=CascadeType.ALL, mappedBy="stockList")
-	private List<Basket> basketList;
+	@Column
+	private String stockPrice;
+	
+//	@ManyToMany(cascade=CascadeType.ALL, mappedBy="stockList")
+//	private List<Basket> basketList;
+	
+	public Stock() {
+		
+	}
 
-	public Stock(int stockId, String stockName, String stockSymbol, List<Basket> basketList) {
+	public Stock(String isin, String stockName, String industry, String stockSymbol, String stockPrice) {
 		super();
-		this.stockId = stockId;
+		this.isin = isin;
 		this.stockName = stockName;
+		this.industry = industry;
 		this.stockSymbol = stockSymbol;
-		this.basketList = basketList;
+		this.stockPrice = stockPrice;
+//		this.basketList = basketList;
 	}
 
-	public int getStockId() {
-		return stockId;
+	public String getIsin() {
+		return isin;
 	}
 
-	public void setStockId(int stockId) {
-		this.stockId = stockId;
+	public void setIsin(String isin) {
+		this.isin = isin;
 	}
 
 	public String getStockName() {
@@ -52,6 +62,14 @@ public class Stock {
 		this.stockName = stockName;
 	}
 
+	public String getIndustry() {
+		return industry;
+	}
+
+	public void setIndustry(String industry) {
+		this.industry = industry;
+	}
+
 	public String getStockSymbol() {
 		return stockSymbol;
 	}
@@ -60,11 +78,19 @@ public class Stock {
 		this.stockSymbol = stockSymbol;
 	}
 
-	public List<Basket> getBasketList() {
-		return basketList;
+	public String getStockPrice() {
+		return stockPrice;
 	}
 
-	public void setBasketList(List<Basket> basketList) {
-		this.basketList = basketList;
+	public void setStockPrice(String stockPrice) {
+		this.stockPrice = stockPrice;
 	}
+
+//	public List<Basket> getBasketList() {
+//		return basketList;
+//	}
+//
+//	public void setBasketList(List<Basket> basketList) {
+//		this.basketList = basketList;
+//	}
 }

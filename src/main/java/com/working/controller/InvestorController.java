@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.working.dao.InvestorDAO;
-import com.working.model.InvestmentAdvisor;
 import com.working.model.Investor;
-import com.working.services.InvestmentAdvisor.InvestmentAdvisorService;
 import com.working.services.Investor.InvestorService;
 
 @RestController

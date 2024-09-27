@@ -1,14 +1,10 @@
 package com.working.model;
 
-import java.util.List;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 
 @Entity
 public class InvestmentAdvisor {
@@ -25,10 +21,6 @@ public class InvestmentAdvisor {
 	
 	@Column(nullable=false)
 	private String iaPassword;
-	
-	@Column
-	@OneToMany(cascade=CascadeType.ALL, mappedBy="investmentAdvisor")
-	private List<Basket> basketList;
 	
 	protected InvestmentAdvisor() {
 		
@@ -49,14 +41,6 @@ public class InvestmentAdvisor {
 
 	public void setIaName(String iaName) {
 		this.iaName = iaName;
-	}
-
-	public List<Basket> getBasketList() {
-		return basketList;
-	}
-
-	public void setBasketList(List<Basket> basketList) {
-		this.basketList = basketList;
 	}
 
 	public int getIaId() {

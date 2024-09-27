@@ -8,10 +8,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -30,28 +26,11 @@ public class Basket {
 	@Column
 	private String basketSummary;
 	
-	@ManyToOne
-	@JoinColumn(name="fk_iaId")
-	private InvestmentAdvisor investmentAdvisor;
+	@Column
+	private int fk_iaId;
 	
     @OneToMany(mappedBy = "basket", cascade = CascadeType.ALL)
     private List<BasketAndStock> basketStockList;
-	
-//	@ManyToMany
-//	@JoinTable(
-//			name="Basket_and_Stock",
-//			joinColumns=@JoinColumn(name="basketId"),
-//			inverseJoinColumns=@JoinColumn(name="isin")
-//			)
-//	private List<Stock> stockList;
-	
-// 	@ManyToMany
-// 	@JoinTable(
-// 			name="Basket_and_Investor",
-// 			joinColumns=@JoinColumn(name="basketId"),
-// 			inverseJoinColumns=@JoinColumn(name="investorId")
-// 			)
-// 	private List<Investor> investorList;
   
     @OneToMany(mappedBy = "basket", cascade = CascadeType.ALL)
     private List<InvestorAndBasket> investorAndBasketList;
@@ -60,7 +39,6 @@ public class Basket {
 	super();
 	this.basketName = basketName;
 	this.basketSummary = basketSummary;
-	this.investmentAdvisor = investmentAdvisor;
 	}
 
 	public int getBasketId() {
@@ -87,14 +65,6 @@ public class Basket {
 		this.basketSummary = basketSummary;
 	}
 
-	public InvestmentAdvisor getInvestmentAdvisor() {
-		return investmentAdvisor;
-	}
-
-	public void setInvestmentAdvisor(InvestmentAdvisor investmentAdvisor) {
-		this.investmentAdvisor = investmentAdvisor;
-	}
-
 	public List<BasketAndStock> getBasketStockList() {
 		return basketStockList;
 	}
@@ -103,11 +73,4 @@ public class Basket {
 		this.basketStockList = basketStockList;
 	}
 
-	public List<Investor> getInvestorList() {
-		return investorList;
-	}
-
-	public void setInvestorList(List<Investor> investorList) {
-		this.investorList = investorList;
-	}
 }

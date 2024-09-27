@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import com.working.dao.BasketDAO;
 import com.working.dao.InvestmentAdvisorDAO;
 import com.working.model.Basket;
-import com.working.model.InvestmentAdvisor;
 
 @Service
 public class BasketServiceImpl implements BasketService {

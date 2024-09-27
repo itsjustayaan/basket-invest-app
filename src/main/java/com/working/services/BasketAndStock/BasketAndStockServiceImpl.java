@@ -31,7 +31,7 @@ public class BasketAndStockServiceImpl implements BasketAndStockService {
 
 	@Override
 	public ResponseEntity<String> createBasket(BasketAndStock basketstock) {
-		InvestmentAdvisor i1 = new InvestmentAdvisor("Ganesh","gg@.com","pass1");
+		InvestmentAdvisor i1 = new InvestmentAdvisor("Ganesh","gg@.com");
 		inv.createInvestmentAdvisor(i1);
 		System.out.println(i1);
 		Basket b1 = new Basket("Test-Basket","Please Work",i1);

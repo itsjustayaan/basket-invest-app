@@ -9,6 +9,6 @@ import com.working.model.InvestmentAdvisor;
 
 @Repository
 public interface InvestmentAdvisorDAO extends JpaRepository<InvestmentAdvisor,Integer>{
-	public List<InvestmentAdvisor> findByIaEmail(String iaEmail);
+	public List<InvestmentAdvisor> findByEmail(String iaEmail);
 	public List<InvestmentAdvisor> findByIaName(String iaName);
 }

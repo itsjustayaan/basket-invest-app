@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -15,16 +17,20 @@ public class Admins {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int adminId;
 	
-	@Column
-	private String adminEmail;
+	@Column(insertable=false, updatable=false)
+	private String email;
 	
 	@Column
 	private String adminPass;
 	
+	@OneToOne
+	@JoinColumn(name="email", referencedColumnName="email")
+	private Roles role;
+	
 	public Admins(int adminId, String adminEmail, String adminPass) {
 		super();
 		this.adminId = adminId;
-		this.adminEmail = adminEmail;
+		this.email = adminEmail;
 		this.adminPass = adminPass;
 	}
 	
@@ -35,10 +41,10 @@ public class Admins {
 		this.adminId = adminId;
 	}
 	public String getAdminEmail() {
-		return adminEmail;
+		return email;
 	}
 	public void setAdminEmail(String adminEmail) {
-		this.adminEmail = adminEmail;
+		this.email = adminEmail;
 	}
 	public String getAdminPass() {
 		return adminPass;

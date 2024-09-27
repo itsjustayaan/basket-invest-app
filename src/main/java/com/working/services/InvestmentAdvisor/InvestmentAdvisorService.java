@@ -13,5 +13,5 @@ public interface InvestmentAdvisorService {
 	public ResponseEntity<List<InvestmentAdvisor>> findAllInvestmentAdvisor();
 	public boolean ifExistsInvestmentAdvisor(int iaId);
 	public ResponseEntity<List<InvestmentAdvisor>> findInvestmentAdvisor(String iaName);
-	public ResponseEntity<List<InvestmentAdvisor>> findByEmailInvestmentAdvisor(String iaEmail);
+	public ResponseEntity<InvestmentAdvisor> findByEmailInvestmentAdvisor(String iaEmail);
 }

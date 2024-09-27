@@ -1,10 +1,18 @@
 package com.working.model;
 
+import java.util.List;
+
+import com.working.authentication.Roles;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class InvestmentAdvisor {
@@ -16,21 +24,24 @@ public class InvestmentAdvisor {
 	@Column(nullable=false)
 	private String iaName;
 	
-	@Column(nullable=false)
-	private String iaEmail;
+	@Column(insertable=false, updatable=false)
+	private String email;
 	
 	@Column(nullable=false)
 	private String iaPassword;
+	
+	@OneToOne
+	@JoinColumn(name="email", referencedColumnName="email")
+	private Roles role;
 	
 	protected InvestmentAdvisor() {
 		
 	}
 	
-	public InvestmentAdvisor(String iaName, String ia_Email, String ia_Password) {
+	public InvestmentAdvisor(String ia_Name, String ia_Email) {
 		super();
-		this.iaName=iaName;
-		this.iaEmail = ia_Email;
-		this.iaPassword = ia_Password;
+		this.iaName = ia_Name;
+		this.email = ia_Email;
 	}
 
 	
@@ -42,7 +53,7 @@ public class InvestmentAdvisor {
 	public void setIaName(String iaName) {
 		this.iaName = iaName;
 	}
-
+	
 	public int getIaId() {
 		return iaId;
 	}
@@ -52,23 +63,24 @@ public class InvestmentAdvisor {
 	}
 
 	public String getIaEmail() {
-		return iaEmail;
+		return email;
 	}
 
 	public void setIaEmail(String iaEmail) {
-		this.iaEmail = iaEmail;
+		this.email = iaEmail;
+	}
+
+
+	@Override
+	public String toString() {
+		return "InvestmentAdvisor [iaId=" + iaId + ", iaEmail=" + email + "]";
 	}
 
 	public String getIaPassword() {
 		return iaPassword;
 	}
 
-	public void setIaPassword(String iaPassword) {
-		this.iaPassword = iaPassword;
-	}
-
-	@Override
-	public String toString() {
-		return "InvestmentAdvisor [iaId=" + iaId + ", iaEmail=" + iaEmail + ", iaPassword=" + iaPassword + "]";
+	public Roles getRole() {
+		return role;
 	}
 }

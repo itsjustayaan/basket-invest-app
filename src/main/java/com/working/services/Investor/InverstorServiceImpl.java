@@ -22,7 +22,7 @@ public class InverstorServiceImpl implements InvestorService{
 		if(investor.getInvestorName() == "") {
 			return new ResponseEntity<>("Investor Name cannot be Empty",HttpStatus.NOT_ACCEPTABLE);
 		}
-		else if(investor.getInvestorEmail() == "") {
+		else if(investor.getEmail() == "") {
 			return new ResponseEntity<>("Investor Email cannot be Empty",HttpStatus.NOT_ACCEPTABLE);
 		}
 		else if(investor.getInvestorPassword() == "") {
@@ -83,12 +83,16 @@ public class InverstorServiceImpl implements InvestorService{
 		return new ResponseEntity<>(investorDAO.findByInvestorName(investorName),HttpStatus.OK);
 	}
 	
-	public ResponseEntity<List<Investor>> findByEmailInvestor(String investorEmail){
-		return new ResponseEntity<>(investorDAO.findByInvestorEmail(investorEmail),HttpStatus.OK);
+	public ResponseEntity<Investor> findByEmailInvestor(String investorEmail){
+		return new ResponseEntity<>(investorDAO.findByEmail(investorEmail).get(0),HttpStatus.OK);
 	}
 	
 	public boolean existsByEmail(String email) {
-		return investorDAO.existsByInvestorEmail(email);
+		return investorDAO.existsByEmail(email);
+	}
+
+	public Investor findByEmail(String Email) {
+		return investorDAO.findByEmail(Email).get(0);
 	}
 }
 	

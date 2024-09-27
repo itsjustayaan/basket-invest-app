@@ -22,7 +22,7 @@ public class InvestorController {
 	
 	@PostMapping
 	public ResponseEntity<String> setInvestor(@RequestBody Investor investor){
-		if(investorService.existsByEmail(investor.getInvestorEmail())) {
+		if(investorService.existsByEmail(investor.getEmail())) {
 			return new ResponseEntity<>("Email-ID already exists",HttpStatus.NOT_ACCEPTABLE);
 		}
 		return investorService.createInvestor(investor);

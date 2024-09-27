@@ -13,6 +13,6 @@ public interface InvestorService {
 	public ResponseEntity<List<Investor>> findAllInvestors();
 	public boolean ifExistsInvestor(int investorId);
 	public ResponseEntity<List<Investor>> findInvestor(String investorName);
-	public ResponseEntity<List<Investor>> findByEmailInvestor(String investorEmail);
+	public ResponseEntity<Investor> findByEmailInvestor(String investorEmail);
 	public boolean existsByEmail(String email); 
 }

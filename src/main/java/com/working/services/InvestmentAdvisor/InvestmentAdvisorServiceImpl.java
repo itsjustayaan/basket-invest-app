@@ -87,8 +87,12 @@ public class InvestmentAdvisorServiceImpl implements InvestmentAdvisorService{
 	}
 
 	@Override
-	public ResponseEntity<List<InvestmentAdvisor>>  findByEmailInvestmentAdvisor(String iaEmail) {
-		return new ResponseEntity<>(investmentAdvisorDAO.findByIaEmail(iaEmail),HttpStatus.OK);
+	public ResponseEntity<InvestmentAdvisor>  findByEmailInvestmentAdvisor(String iaEmail) {
+		return new ResponseEntity<>(investmentAdvisorDAO.findByEmail(iaEmail).get(0),HttpStatus.OK);
+	}
+
+	public InvestmentAdvisor findByEmail(String Email) {
+		return investmentAdvisorDAO.findByEmail(Email).get(0);
 	}
 
 }

@@ -3,13 +3,18 @@ package com.working.model;
 
 import java.util.List;
 
+import com.working.authentication.Roles;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -17,15 +22,15 @@ import jakarta.persistence.Table;
 public class Investor {
 
 	@Id
+	@Column(name = "investor_id")
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name = "investor_id" )
 	private int investorId;
 	
 	@Column
 	private String investorName;
-	
-	@Column
-	private String investorEmail;
+
+	@Column(insertable=false, updatable=false)
+	private String email;
 	
 	@Column
 	private String investorPassword;
@@ -33,16 +38,16 @@ public class Investor {
 	@Column
 	private double investorBalance;
 	
-    @OneToMany(mappedBy = "investor", cascade = CascadeType.ALL)
-    private List<InvestorAndBasket> investorAndBasketList;	
-	public Investor() {}
-	
+	@OneToOne
+	@JoinColumn(name="email", referencedColumnName="email")
+	private Roles role;
+
 	public Investor(int investorId, String investorName, String investorEmail, String investorPassword,
 			double investorBalance) {
 		super();
 		this.investorId = investorId;
 		this.investorName = investorName;
-		this.investorEmail = investorEmail;
+		this.email = investorEmail;
 		this.investorPassword = investorPassword;
 		this.investorBalance = investorBalance;
 	}
@@ -63,12 +68,12 @@ public class Investor {
 		this.investorName = investorName;
 	}
 
-	public String getInvestorEmail() {
-		return investorEmail;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setInvestorEmail(String investorEmail) {
-		this.investorEmail = investorEmail;
+	public void setEmail(String investorEmail) {
+		this.email = investorEmail;
 	}
 
 	public String getInvestorPassword() {
@@ -77,6 +82,14 @@ public class Investor {
 
 	public void setInvestorPassword(String investorPassword) {
 		this.investorPassword = investorPassword;
+	}
+
+	public Roles getRole() {
+		return role;
+	}
+
+	public void setRole(Roles role) {
+		this.role = role;
 	}
 
 	public double getInvestorBalance() {

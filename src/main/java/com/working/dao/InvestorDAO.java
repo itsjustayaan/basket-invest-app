@@ -9,8 +9,8 @@ import com.working.model.Investor;
 
 @Repository
 public interface InvestorDAO extends JpaRepository<Investor,Integer> {
-	public List<Investor> findByInvestorEmail(String investorEmail);
+	public List<Investor> findByEmail(String investorEmail);
 	public List<Investor> findByInvestorName(String investorName);
-	public boolean existsByInvestorEmail(String email);
+	public boolean existsByEmail(String email);
 
 }

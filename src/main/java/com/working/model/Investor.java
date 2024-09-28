@@ -18,7 +18,6 @@ public class Investor {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name = "investor_id" )
 	private int investorId;
 	
 	@Column
@@ -31,16 +30,17 @@ public class Investor {
 	private String investorPassword;
 	
 	@Column
-	private double investorBalance;
+	private int investorBalance;
 	
     @OneToMany(mappedBy = "investor", cascade = CascadeType.ALL)
     private List<InvestorAndBasket> investorAndBasketList;	
-	public Investor() {}
+	public Investor() {
+		
+	}
 	
-	public Investor(int investorId, String investorName, String investorEmail, String investorPassword,
-			double investorBalance) {
+	public Investor(String investorName, String investorEmail, String investorPassword,
+			int investorBalance) {
 		super();
-		this.investorId = investorId;
 		this.investorName = investorName;
 		this.investorEmail = investorEmail;
 		this.investorPassword = investorPassword;
@@ -79,11 +79,19 @@ public class Investor {
 		this.investorPassword = investorPassword;
 	}
 
-	public double getInvestorBalance() {
+	public int getInvestorBalance() {
 		return investorBalance;
 	}
 
-	public void setInvestorBalance(double investorBalance) {
+	public void setInvestorBalance(int investorBalance) {
 		this.investorBalance = investorBalance;
+	}
+	
+	public List<InvestorAndBasket> getInvestorAndBasketList() {
+		return investorAndBasketList;
+	}
+
+	public void setInvestorAndBasketList(List<InvestorAndBasket> investorAndBasketList) {
+		this.investorAndBasketList = investorAndBasketList;
 	}
 }

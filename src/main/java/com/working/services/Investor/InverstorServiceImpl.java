@@ -90,6 +90,16 @@ public class InverstorServiceImpl implements InvestorService{
 	public boolean existsByEmail(String email) {
 		return investorDAO.existsByInvestorEmail(email);
 	}
+
+	@Override
+	public ResponseEntity<String> updateInvestorBalance(int balance) {
+		System.out.print(balance);
+		Investor inv = new Investor("Ganesh","gg@gmail.com","lessgoo",10);
+		investorDAO.save(inv);
+		inv.setInvestorBalance(balance);
+		investorDAO.save(inv);
+		return null;
+	}
 }
 	
 

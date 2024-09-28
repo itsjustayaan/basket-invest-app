@@ -10,7 +10,6 @@ import com.working.dao.BasketDAO;
 import com.working.dao.StockDAO;
 import com.working.model.Basket;
 import com.working.model.BasketAndStock;
-import com.working.model.InvestmentAdvisor;
 import com.working.model.Stock;
 import com.working.services.InvestmentAdvisor.InvestmentAdvisorServiceImpl;
 
@@ -31,18 +30,13 @@ public class BasketAndStockServiceImpl implements BasketAndStockService {
 
 	@Override
 	public ResponseEntity<String> createBasket(BasketAndStock basketstock) {
-		InvestmentAdvisor i1 = new InvestmentAdvisor("Ganesh","gg@.com","pass1");
-		inv.createInvestmentAdvisor(i1);
-		System.out.println(i1);
-		Basket b1 = new Basket("Test-Basket","Please Work",i1);
-		basketDAO.save(b1);
+		System.out.println(basketstock.getQuantity());
+		Stock s1 = stockDAO.findById("INE423A01024").get();
+		basketstock.setStock(s1);
+		System.out.println(basketstock.getStock().getIndustry());
+		Basket b1 = basketDAO.findById(1).get();
 		System.out.println(b1);
-		Stock s = new Stock("hjbkjbk","GGWP","Valo","NHK","999.99");
-		stockDAO.save(s);
-		System.out.println(s);
 		basketstock.setBasket(b1);
-		basketstock.setStock(s);
-		basketstock.setQuantity(5);
 		basketStock.save(basketstock);
 		return new ResponseEntity<>("Basket Created",HttpStatus.CREATED);
 	}

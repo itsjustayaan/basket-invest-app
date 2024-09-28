@@ -32,8 +32,6 @@ public class InvestmentAdvisor {
 		this.iaEmail = ia_Email;
 		this.iaPassword = ia_Password;
 	}
-
-	
 	
 	public String getIaName() {
 		return iaName;

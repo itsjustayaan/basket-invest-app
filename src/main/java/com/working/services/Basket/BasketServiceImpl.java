@@ -20,16 +20,12 @@ public class BasketServiceImpl implements BasketService {
 
 	@Override
 	public ResponseEntity<String> createBasket(Basket basket) {
-//		InvestmentAdvisor obj = new InvestmentAdvisor("Ayaan","aa@a.com","pass");
-//		basket.setInvestmentAdvisor(iaDAO.save(obj));
-//		System.out.println(basket.getInvestmentAdvisor());
 		basketDAO.save(basket);
 		return new ResponseEntity<>("Basket Created",HttpStatus.CREATED);
 	}
 
 	@Override
 	public ResponseEntity<String> deleteBasket(int basketId) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

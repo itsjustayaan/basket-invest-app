@@ -26,6 +26,10 @@ public class BasketAndStock {
     private Stock stock;
 
     private int quantity;
+    
+    public BasketAndStock() {
+    	
+    }
 
 	public BasketAndStock(Basket basket, Stock stock, int quantity) {
 		super();
@@ -56,5 +60,13 @@ public class BasketAndStock {
 
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
+	}
+
+	public int getBsId() {
+		return bsId;
+	}
+
+	public void setBsId(int bsId) {
+		this.bsId = bsId;
 	}
 }

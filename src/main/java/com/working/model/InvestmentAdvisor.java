@@ -1,17 +1,13 @@
 package com.working.model;
 
-import java.util.List;
-
 import com.working.authentication.Roles;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
 @Entity
@@ -78,6 +74,22 @@ public class InvestmentAdvisor {
 
 	public String getIaPassword() {
 		return iaPassword;
+	}
+	
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public void setIaPassword(String iaPassword) {
+		this.iaPassword = iaPassword;
+	}
+
+	public void setRole(Roles role) {
+		this.role = role;
 	}
 
 	public Roles getRole() {

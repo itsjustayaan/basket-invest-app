@@ -9,8 +9,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.working.dao.AdminDAO;
 import com.working.model.InvestmentAdvisor;
 import com.working.model.Investor;
+import com.working.services.Admin.AdminServiceImpl;
 import com.working.services.InvestmentAdvisor.InvestmentAdvisorServiceImpl;
 import com.working.services.Investor.InverstorServiceImpl;
 
@@ -22,6 +24,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
     private InverstorServiceImpl investorImpl;
+    
+    @Autowired
+    private AdminServiceImpl adminServiceImpl;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -36,7 +41,8 @@ public class CustomUserDetailsService implements UserDetailsService {
             return new User(investor.getEmail(), investor.getInvestorPassword(), 
                     List.of(new SimpleGrantedAuthority(investor.getRole().getRole())));
         }
-
+        
         throw new UsernameNotFoundException("User not found with Email: " + username);
     }
+    
 }

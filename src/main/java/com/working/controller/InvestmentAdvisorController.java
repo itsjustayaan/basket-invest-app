@@ -24,9 +24,8 @@ public class InvestmentAdvisorController {
 	public ResponseEntity<String> createAdvisor(@RequestBody InvestmentAdvisor investmentAdvisor){
 		return investmentAdvisorService.createInvestmentAdvisor(investmentAdvisor);
 	}
-	@PutMapping("/{iaId}")
-	public ResponseEntity<String> updateAdvisor(@PathVariable("iaId") int iaId,@RequestBody InvestmentAdvisor investmentAdvisor){
-		investmentAdvisor.setIaId(iaId);
+	@PutMapping
+	public ResponseEntity<String> updateAdvisor(@RequestBody InvestmentAdvisor investmentAdvisor){
 		return investmentAdvisorService.updateInvestmentAdvisor(investmentAdvisor);
 	}
 	@DeleteMapping

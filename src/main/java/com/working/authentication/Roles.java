@@ -17,7 +17,7 @@ public class Roles {
     @Id
     private String email;
 
-    @Column
+	@Column
     private String password;
 
     @Column
@@ -71,4 +71,11 @@ public class Roles {
     public void setInvestor(Investor investor) {
         this.investor = investor;
     }
+    
+    public Roles(String email, String password, String role) {
+  		super();
+  		this.email = email;
+  		this.password = password;
+  		this.role = role;
+  	}
 }

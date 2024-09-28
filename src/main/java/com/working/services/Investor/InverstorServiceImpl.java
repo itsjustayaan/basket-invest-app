@@ -8,7 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.working.authentication.Roles;
 import com.working.dao.InvestorDAO;
+import com.working.dao.RolesDAO;
 import com.working.model.Investor;
 
 @Service
@@ -17,6 +19,8 @@ public class InverstorServiceImpl implements InvestorService{
 	@Autowired
 	InvestorDAO investorDAO;
 	
+	@Autowired
+	RolesDAO rolesDAO;
 	@Override
 	public ResponseEntity<String> createInvestor(Investor investor){
 		if(investor.getInvestorName() == "") {
@@ -34,6 +38,8 @@ public class InverstorServiceImpl implements InvestorService{
 		}
 		else {
 			investorDAO.save(investor);
+			Roles roles = new Roles(investor.getEmail(),investor.getInvestorPassword(),"ROLE_INVESTOR");
+			rolesDAO.save(roles);
 			return new ResponseEntity<>("Investor ID Created",HttpStatus.CREATED);
 		}
 	}

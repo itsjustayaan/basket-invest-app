@@ -8,7 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.working.authentication.Roles;
 import com.working.dao.InvestmentAdvisorDAO;
+import com.working.dao.RolesDAO;
 import com.working.model.InvestmentAdvisor;
 
 @Service
@@ -17,6 +19,9 @@ public class InvestmentAdvisorServiceImpl implements InvestmentAdvisorService{
 
 	@Autowired
 	InvestmentAdvisorDAO investmentAdvisorDAO;
+	
+	@Autowired
+	RolesDAO rolesDAO;
 	
 	@Override
 	public ResponseEntity<String> createInvestmentAdvisor(InvestmentAdvisor investmentAdvisor) {
@@ -35,6 +40,8 @@ public class InvestmentAdvisorServiceImpl implements InvestmentAdvisorService{
 		}
 		else {
 			investmentAdvisorDAO.save(investmentAdvisor);
+			Roles roles = new Roles(investmentAdvisor.getEmail(),investmentAdvisor.getIaPassword(),"ROLE_INVESTMENT_ADVISOR");
+			rolesDAO.save(roles);
 			return new ResponseEntity<>("Investment Advisor ID Created",HttpStatus.CREATED);
 		}
 	}
@@ -48,9 +55,9 @@ public class InvestmentAdvisorServiceImpl implements InvestmentAdvisorService{
 			return new ResponseEntity<>("Investment Advisor with this ID doesn't exist",HttpStatus.CONFLICT);
 		}
 		else {
-			Optional<InvestmentAdvisor> iaTemp = investmentAdvisorDAO.findById(investmentAdvisor.getIaId());
-			if(iaTemp.get().getIaName().equals(investmentAdvisor.getIaName())) {
-				investmentAdvisorDAO.save(investmentAdvisor);
+			InvestmentAdvisor iaTemp = investmentAdvisorDAO.findById(investmentAdvisor.getIaId()).get();
+			if(iaTemp.getIaName().equals(investmentAdvisor.getIaName())) {
+				iaTemp.setIaPassword(investmentAdvisor.getIaPassword());
 				return new ResponseEntity<>("Investment Advisor with ID Updated",HttpStatus.CREATED);
 			}
 			else

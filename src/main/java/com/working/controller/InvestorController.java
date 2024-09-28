@@ -37,4 +37,9 @@ public class InvestorController {
 	public ResponseEntity<String> deleteInvestor(@RequestBody Investor investor){
 		return investorService.deleteInvestor(investor.getInvestorId());
 	}
+	
+	@PutMapping("/balance")
+	public ResponseEntity<String> updateBalance(@RequestBody Investor investor){
+		return investorService.updateInvestorBalance(investor.getInvestorBalance());
+	}
 }

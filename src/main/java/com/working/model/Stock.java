@@ -81,12 +81,4 @@ public class Stock {
 	public void setStockPrice(String stockPrice) {
 		this.stockPrice = stockPrice;
 	}
-
-//	public List<Basket> getBasketList() {
-//		return basketList;
-//	}
-//
-//	public void setBasketList(List<Basket> basketList) {
-//		this.basketList = basketList;
-//	}
 }

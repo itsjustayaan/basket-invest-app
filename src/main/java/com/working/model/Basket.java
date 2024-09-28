@@ -17,7 +17,6 @@ public class Basket {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="basket_id")
 	private int basketId;
 	
 	@Column
@@ -27,13 +26,17 @@ public class Basket {
 	private String basketSummary;
 	
 	@Column
-	private int fk_iaId;
+	private int iaId_ref;
 	
     @OneToMany(mappedBy = "basket", cascade = CascadeType.ALL)
     private List<BasketAndStock> basketStockList;
   
     @OneToMany(mappedBy = "basket", cascade = CascadeType.ALL)
     private List<InvestorAndBasket> investorAndBasketList;
+    
+    public Basket () {
+    	
+    }
 
 	public Basket(String basketName, String basketSummary, InvestmentAdvisor investmentAdvisor) {
 	super();
@@ -73,4 +76,19 @@ public class Basket {
 		this.basketStockList = basketStockList;
 	}
 
+	public int getIaId_ref() {
+		return iaId_ref;
+	}
+
+	public void setIaId_ref(int iaId_ref) {
+		this.iaId_ref = iaId_ref;
+	}
+
+	public List<InvestorAndBasket> getInvestorAndBasketList() {
+		return investorAndBasketList;
+	}
+
+	public void setInvestorAndBasketList(List<InvestorAndBasket> investorAndBasketList) {
+		this.investorAndBasketList = investorAndBasketList;
+	}
 }

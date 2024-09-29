@@ -31,10 +31,11 @@ public class BasketAndStockServiceImpl implements BasketAndStockService {
 	@Override
 	public ResponseEntity<String> createBasket(BasketAndStock basketstock) {
 		System.out.println(basketstock.getQuantity());
-		Stock s1 = stockDAO.findById("INE423A01024").get();
-		basketstock.setStock(s1);
+//		Stock s1 = stockDAO.findById("INE423A01024").get();
+		Stock s2 = stockDAO.findById("INE009A01021").get();
+		basketstock.setStock(s2);
 		System.out.println(basketstock.getStock().getIndustry());
-		Basket b1 = basketDAO.findById(1).get();
+		Basket b1 = basketDAO.findById(2).get();
 		System.out.println(b1);
 		basketstock.setBasket(b1);
 		basketStock.save(basketstock);

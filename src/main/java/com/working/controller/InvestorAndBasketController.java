@@ -30,8 +30,8 @@ public class InvestorAndBasketController {
 	
 	@PostMapping
 	public ResponseEntity<String> setInvestorBasket(@RequestBody InvestorAndBasket investBasket){
-		Investor inv = invDAO.findById(1).get();
-		Basket bs = basDAO.findById(1).get();
+		Investor inv = invDAO.findById(5).get();
+		Basket bs = basDAO.findById(2).get();
 		investBasket.setBasket(bs);
 		investBasket.setInvestor(inv);
 		invBas.save(investBasket);

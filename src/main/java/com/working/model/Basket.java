@@ -1,5 +1,6 @@
 package com.working.model;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -91,4 +92,18 @@ public class Basket {
 	public void setInvestorAndBasketList(List<InvestorAndBasket> investorAndBasketList) {
 		this.investorAndBasketList = investorAndBasketList;
 	}
+	
+	public BigDecimal calculateBasketPrice() {
+        BigDecimal totalPrice = BigDecimal.ZERO;
+
+        for (BasketAndStock basketStock : basketStockList) {
+            Stock stock = basketStock.getStock();
+            BigDecimal stockPrice = new BigDecimal(stock.getStockPrice());
+            BigDecimal stockQuantity = new BigDecimal(basketStock.getQuantity());
+            
+            totalPrice = totalPrice.add(stockPrice.multiply(stockQuantity));
+        }
+
+        return totalPrice;
+    }
 }

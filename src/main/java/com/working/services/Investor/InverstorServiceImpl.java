@@ -1,5 +1,6 @@
 package com.working.services.Investor;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -10,11 +11,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.working.dao.InvestorAndBasketDAO;
 import com.working.dao.InvestorDAO;
 import com.working.dao.UserRepository;
 import com.working.model.Authority;
+import com.working.model.Basket;
 import com.working.model.Investor;
+import com.working.model.InvestorAndBasket;
 import com.working.model.Users;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class InverstorServiceImpl implements InvestorService{
@@ -24,6 +30,9 @@ public class InverstorServiceImpl implements InvestorService{
 	
 	@Autowired
 	UserRepository userRepository;
+	
+	@Autowired
+	InvestorAndBasketDAO investorAndBasketRepository;
 	
 	@Override
 	public ResponseEntity<String> createInvestor(Investor investor){
@@ -107,12 +116,48 @@ public class InverstorServiceImpl implements InvestorService{
 	@Override
 	public ResponseEntity<String> updateInvestorBalance(int balance) {
 		System.out.print(balance);
-		Investor inv = new Investor("Ganesh","gg@gmail.com","lessgoo",10);
+		Investor inv = new Investor("Jay","gg@gmail.com","lessgoo",10);
 		investorDAO.save(inv);
 		inv.setInvestorBalance(balance);
 		investorDAO.save(inv);
 		return null;
 	}
+	
+	 @Transactional
+	    public void sellBasket(Investor investor, Basket basket, int quantityToSell) throws Exception {
+
+	        // Check if the investor owns the basket
+	        InvestorAndBasket investorAndBasket = investorAndBasketRepository.findByInvestorAndBasket(investor, basket);
+	        
+	        if (investorAndBasket == null) {
+	            throw new Exception("You don't own this basket. Short selling is not allowed.");
+	        }
+
+	        // Check if the quantity to sell is valid (no fractional selling)
+	        if (quantityToSell <= 0 || quantityToSell > investorAndBasket.getQuantity()) {
+	            throw new Exception("Invalid quantity. You can only sell whole baskets you own.");
+	        }
+
+	        // Calculate the price of the basket
+	        BigDecimal basketPrice = basket.calculateBasketPrice();
+
+	        // Update the investor's balance
+	        BigDecimal amountReceived = basketPrice.multiply(new BigDecimal(quantityToSell));
+	        investor.setInvestorBalance(investor.getInvestorBalance() + amountReceived.intValue());
+
+	        // Update the investor's basket quantity
+	        int remainingQuantity = investorAndBasket.getQuantity() - quantityToSell;
+	        if (remainingQuantity == 0) {
+	            // Remove the basket if the investor has sold all of their shares
+	            investorAndBasketRepository.delete(investorAndBasket);
+	        } else {
+	            investorAndBasket.setQuantity(remainingQuantity);
+	            investorAndBasketRepository.save(investorAndBasket);
+	        }
+
+	        // Save the updated investor data
+	        investorDAO.save(investor);
+	    }
 }
 	
 

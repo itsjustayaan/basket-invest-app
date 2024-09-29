@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 
+import com.working.model.Basket;
 import com.working.model.Investor;
 
 public interface InvestorService {
@@ -16,4 +17,5 @@ public interface InvestorService {
 	public ResponseEntity<List<Investor>> findInvestor(String investorName);
 	public ResponseEntity<List<Investor>> findByEmailInvestor(String investorEmail);
 	public boolean existsByEmail(String email); 
+	public void sellBasket(Investor investor, Basket basket, int quantityToSell)throws Exception;
 }

@@ -10,7 +10,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.working.dao.BasketDAO;
+import com.working.dao.InvestorDAO;
+import com.working.model.Basket;
 import com.working.model.Investor;
+import com.working.model.Sell;
 import com.working.services.Investor.InvestorService;
 
 @RestController
@@ -19,6 +23,13 @@ public class InvestorController {
 	
 	@Autowired
 	InvestorService investorService;
+	
+	@Autowired
+	InvestorDAO investorDAO;
+
+	@Autowired
+	BasketDAO basketDAO;
+	
 	
 	@PostMapping("create")
 	public ResponseEntity<String> setInvestor(@RequestBody Investor investor){
@@ -42,4 +53,18 @@ public class InvestorController {
 	public ResponseEntity<String> updateBalance(@RequestBody Investor investor){
 		return investorService.updateInvestorBalance(investor.getInvestorBalance());
 	}
+	
+	 @PostMapping("/sell")
+	    public String sellBasket(@RequestBody Sell sell) {
+
+	        Investor investor = investorDAO.findById(sell.getInvestorId()).orElseThrow(() -> new RuntimeException("Investor not found"));
+	        Basket basket = basketDAO.findById(sell.getBasketId()).orElseThrow(() -> new RuntimeException("Basket not found"));
+
+	        try {
+	            investorService.sellBasket(investor, basket, sell.getQuantity());
+	            return "Basket sold successfully.";
+	        } catch (Exception e) {
+	            return "Error: " + e.getMessage();
+	        }
+	    }
 }

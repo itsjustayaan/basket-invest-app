@@ -1,7 +1,9 @@
 package com.working.services.InvestmentAdvisor;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,6 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.working.dao.InvestmentAdvisorDAO;
+import com.working.dao.UserRepository;
+import com.working.model.Users;
+import com.working.model.Authority;
 import com.working.model.InvestmentAdvisor;
 
 @Service
@@ -17,6 +22,9 @@ public class InvestmentAdvisorServiceImpl implements InvestmentAdvisorService{
 
 	@Autowired
 	InvestmentAdvisorDAO investmentAdvisorDAO;
+
+	@Autowired
+	UserRepository userRepository;
 	
 	@Override
 	public ResponseEntity<String> createInvestmentAdvisor(InvestmentAdvisor investmentAdvisor) {
@@ -35,6 +43,12 @@ public class InvestmentAdvisorServiceImpl implements InvestmentAdvisorService{
 		}
 		else {
 			investmentAdvisorDAO.save(investmentAdvisor);
+		    Set<Authority> authorities = new HashSet<>();
+		    Authority authority = new Authority(investmentAdvisor.getIaEmail(),"INVESTMENT_ADVISOR");
+		    authorities.add(authority);
+		    Users user = new Users(investmentAdvisor.getIaEmail(), investmentAdvisor.getIaPassword(), true, authorities);
+		    System.out.print(investmentAdvisor.getIaEmail() + investmentAdvisor.getIaPassword() + authorities);
+		    userRepository.save(user);
 			return new ResponseEntity<>("Investment Advisor ID Created",HttpStatus.CREATED);
 		}
 	}

@@ -45,6 +45,14 @@ public class Users {
 		this.enabled = enabled;
 		this.authorities = authorities;
 	}
+	
+	public Users(String username, String password, boolean enabled, Set<Authority> authorities) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.enabled = enabled;
+		this.authorities = authorities;
+	}
 
 	public Long getId() {
 		return id;

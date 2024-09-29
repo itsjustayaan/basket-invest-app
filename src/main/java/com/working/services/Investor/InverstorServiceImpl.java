@@ -1,7 +1,9 @@
 package com.working.services.Investor;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,13 +11,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.working.dao.InvestorDAO;
+import com.working.dao.UserRepository;
+import com.working.model.Authority;
 import com.working.model.Investor;
+import com.working.model.Users;
 
 @Service
 public class InverstorServiceImpl implements InvestorService{
 	
 	@Autowired
 	InvestorDAO investorDAO;
+	
+	@Autowired
+	UserRepository userRepository;
 	
 	@Override
 	public ResponseEntity<String> createInvestor(Investor investor){
@@ -34,6 +42,11 @@ public class InverstorServiceImpl implements InvestorService{
 		}
 		else {
 			investorDAO.save(investor);
+		    Set<Authority> authorities = new HashSet<>();
+		    Authority authority = new Authority(investor.getInvestorEmail(),"INVESTOR");
+		    authorities.add(authority);
+		    Users user = new Users(investor.getInvestorEmail(), investor.getInvestorPassword(), true, authorities);
+		    userRepository.save(user);
 			return new ResponseEntity<>("Investor ID Created",HttpStatus.CREATED);
 		}
 	}

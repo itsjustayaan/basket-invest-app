@@ -15,9 +15,8 @@ import com.working.services.CustomUserDetailsService;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-	
-	
-    private CustomUserDetailsService userDetailsService;
+
+    private final CustomUserDetailsService userDetailsService;
 
     public SecurityConfig(CustomUserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
@@ -32,22 +31,25 @@ public class SecurityConfig {
     // Security filter chain configuration
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/user/**").hasRole("USER")
-                        .requestMatchers("/login").permitAll()
-                        .anyRequest().authenticated()
-                )
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .defaultSuccessUrl("/home", true)
-                        .permitAll()
-                )
-                .logout(logout -> logout
-                        .permitAll()
-                )
-                .build();
+        http
+            .csrf().disable() // Disable CSRF for simplicity; consider enabling it in production
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/**").permitAll() // Allow all requests
+                .requestMatchers("/ia/create").hasRole("ADMIN") // Admin-only access
+                .anyRequest().authenticated() // All other requests require authentication
+            )
+            .httpBasic() // Enable Basic Authentication
+            .and()
+            .formLogin(form -> form
+                .loginPage("/login") // Custom login page
+                .defaultSuccessUrl("/home", true) // Redirect after successful login
+                .permitAll()
+            )
+            .logout(logout -> logout
+                .permitAll()
+            );
+
+        return http.build();
     }
 
     // Use AuthenticationManager to authenticate users with CustomUserDetailsService

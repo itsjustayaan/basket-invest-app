@@ -25,12 +25,12 @@ public class AdminController {
 	@Autowired
 	InvestmentAdvisorService investmentAdvisorService;
 	
-	@PostMapping("create")
+	@PostMapping("createAdvisor")
 	public ResponseEntity<String> createAdvisor(@RequestBody InvestmentAdvisor investmentAdvisor){
 		return investmentAdvisorService.createInvestmentAdvisor(investmentAdvisor);
 	}
 	
-	@PostMapping("create")
+	@PostMapping("createInvestor")
 	public ResponseEntity<String> setInvestor(@RequestBody Investor investor){
 		if(investorService.existsByEmail(investor.getInvestorEmail())) {
 			return new ResponseEntity<>("Email-ID already exists",HttpStatus.NOT_ACCEPTABLE);

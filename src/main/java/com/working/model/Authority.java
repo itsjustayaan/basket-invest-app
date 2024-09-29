@@ -25,9 +25,7 @@ public class Authority {
 		super();
 	}
     
-    public Authority(Long id, String username, String authority) {
-		super();
-		this.id = id;
+    public Authority(String username, String authority) {
 		this.username = username;
 		this.authority = authority;
 	}

@@ -19,7 +19,7 @@ public class InvestmentAdvisorController {
 	@Autowired
 	InvestmentAdvisorService investmentAdvisorService;
 	
-	@PostMapping
+	@PostMapping("create")
 	public ResponseEntity<String> createAdvisor(@RequestBody InvestmentAdvisor investmentAdvisor){
 		return investmentAdvisorService.createInvestmentAdvisor(investmentAdvisor);
 	}

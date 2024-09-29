@@ -7,12 +7,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class AuthenticationController {
 
    
-    @GetMapping("/login")
+    @RequestMapping("/login")
     public String login(Principal principal, Model model, String error, String logout) {
         if (error != null) {
             model.addAttribute("errorMsg", "Your username or password is incorrect.");
@@ -22,7 +23,7 @@ public class AuthenticationController {
             model.addAttribute("msg", "You have been logged out successfully.");
         }
         
-        System.out.println(principal.getName());
+//        System.out.println(principal.getName());
         
         return "login"; 
     }

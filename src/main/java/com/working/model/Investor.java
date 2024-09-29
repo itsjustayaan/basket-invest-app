@@ -3,6 +3,8 @@ package com.working.model;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -94,4 +96,5 @@ public class Investor {
 	public void setInvestorAndBasketList(List<InvestorAndBasket> investorAndBasketList) {
 		this.investorAndBasketList = investorAndBasketList;
 	}
+
 }

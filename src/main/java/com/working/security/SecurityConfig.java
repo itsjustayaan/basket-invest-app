@@ -21,22 +21,17 @@ public class SecurityConfig {
     public SecurityConfig(CustomUserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
-
-    // Password encoder to hash passwords
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
-
-    // Security filter chain configuration
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    
+    @SuppressWarnings("removal")
+	@Bean
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf().disable() // Disable CSRF for simplicity; consider enabling it in production
+            .csrf().disable()
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/**").permitAll() // Allow all requests
-                .requestMatchers("/ia/create").hasRole("ADMIN") // Admin-only access
-                .anyRequest().authenticated() // All other requests require authentication
+            	.requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/investor/**").hasRole("INVESTOR")
+                .requestMatchers("/ia/**").hasRole("INVESTMENT_ADVISOR")
+                .anyRequest().authenticated()
             )
             .httpBasic() // Enable Basic Authentication
             .and()
@@ -51,6 +46,11 @@ public class SecurityConfig {
 
         return http.build();
     }
+    
+//  @Bean
+//  public PasswordEncoder passwordEncoder() {
+//      return new BCryptPasswordEncoder();
+//  }
 
     // Use AuthenticationManager to authenticate users with CustomUserDetailsService
     @Bean

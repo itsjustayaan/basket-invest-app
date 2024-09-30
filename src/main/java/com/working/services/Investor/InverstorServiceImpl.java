@@ -155,9 +155,18 @@ public class InverstorServiceImpl implements InvestorService{
 	            investorAndBasketRepository.save(investorAndBasket);
 	        }
 
-	        // Save the updated investor data
 	        investorDAO.save(investor);
 	    }
+
+	 @Override
+	 public ResponseEntity<String> getInvestorBalance(String investorEmail) {
+	     List<Investor> investors = investorDAO.findByInvestorEmail(investorEmail);
+	     if (investors.isEmpty()) {
+	         return new ResponseEntity<>("Investor not found with email: " + investorEmail, HttpStatus.NOT_FOUND);
+	     }
+	     int balance = investors.get(0).getInvestorBalance();
+	     return new ResponseEntity<>("Investor balance: " + balance, HttpStatus.OK);
+	 }
 }
 	
 

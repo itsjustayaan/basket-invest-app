@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,20 +32,19 @@ public class SecurityConfig {
             	.requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/investor/**").hasRole("INVESTOR")
                 .requestMatchers("/ia/**").hasRole("INVESTMENT_ADVISOR")
+                .requestMatchers("/forgetPass/**").permitAll()
                 .anyRequest().authenticated()
             )
-            .httpBasic() // Enable Basic Authentication
-            .and()
-            .formLogin(form -> form
-                .loginPage("/login") // Custom login page
-                .defaultSuccessUrl("/home", true) // Redirect after successful login
-                .permitAll()
-            )
-            .logout(logout -> logout
-                .permitAll()
-            );
-
+            .httpBasic();
+        
         return http.build();
+    }
+    
+    public void configure(WebSecurity web) throws Exception {
+        web
+            .ignoring()
+            .requestMatchers("/forgetPass/investor/**")
+            .requestMatchers("/forgetPass/ia/**");
     }
     
 //  @Bean

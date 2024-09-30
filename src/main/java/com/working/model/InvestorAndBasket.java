@@ -2,6 +2,8 @@ package com.working.model;
 
 
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -32,9 +34,8 @@ public class InvestorAndBasket {
     @Column
     private int quantity;
     
-//    @Column
-//    @Temporal(TemporalType.TIMESTAMP)
-//    private Date dateBought;
+    @Column
+    private BigDecimal priceBought;
 
     public InvestorAndBasket(){
     	
@@ -77,6 +78,14 @@ public class InvestorAndBasket {
 
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
+	}
+	
+	public BigDecimal getPriceBought() {
+		return priceBought;
+	}
+
+	public void setPriceBought(BigDecimal priceBought) {
+		this.priceBought = priceBought;
 	}
 	
 //    public Date getDateBought() {

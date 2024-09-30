@@ -100,8 +100,9 @@ public class AuthenticationController {
 		    userRepository.save(user);
 		    investmentAdvisorService.sendEmail(email, randomPassword);
 		    return new ResponseEntity<>("Email sent successfully!", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>("ERROR User Not Registered!", HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<>("ERROR User Not Registered!", HttpStatus.NOT_FOUND);
 	}
     
 }

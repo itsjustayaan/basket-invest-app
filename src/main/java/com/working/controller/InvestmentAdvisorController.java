@@ -54,9 +54,21 @@ public class InvestmentAdvisorController {
 		return investmentAdvisorService.updateInvestmentAdvisor(investmentAdvisor);
 	}
 	
+	@PutMapping("testUpdate")
+	public ResponseEntity<InvestmentAdvisor> updateInvestmentAdvisor(Principal principal,@RequestBody InvestmentAdvisor investmentAdvisor) {
+		investmentAdvisor.setIaId(investmentAdvisorDAO.findByIaEmail(principal.getName()).get(0).getIaId());
+	    return ResponseEntity.ok(investmentAdvisor);
+	}
+
+	
 	@PostMapping("createBasket")
 	public ResponseEntity<String> setBasket(@RequestBody Basket basket){
 		return basketImpl.createBasket(basket);
+	}
+	
+	@PostMapping("testCreateBasket")
+	public ResponseEntity<String> setIaBasket(@RequestBody Basket basket){
+		return ResponseEntity.ok(basketImpl.createBasket(basket).toString());
 	}
 	
 	@GetMapping("/forgetPass/{email}")

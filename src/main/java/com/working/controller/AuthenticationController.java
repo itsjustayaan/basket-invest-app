@@ -105,4 +105,40 @@ public class AuthenticationController {
 		}
 	}
     
+    @GetMapping("/testForgetPass/ia/{email}")
+	public ResponseEntity<String> testForgotIaPassword(@PathVariable String email) {
+		List<InvestmentAdvisor> inv = investmentAdvisorDAO.findByIaEmail(email);
+		if(inv != null) {
+		    String randomPassword = investmentAdvisorService.generateRandomPassword(10);
+		    InvestmentAdvisor investor = inv.get(0);
+		    investor.setIaPassword(randomPassword);
+		    investmentAdvisorDAO.save(investor);
+		    Users user = userRepository.findByUsername(email);
+		    user.setPassword(randomPassword);
+		    userRepository.save(user);
+		    investmentAdvisorService.sendEmail(email, randomPassword);
+		    return ResponseEntity.ok("Email sent successfully!");
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ERROR User Not Registered!");
+		}
+	}
+    
+    @GetMapping("/testForgetPass/investor/{email}")
+	public ResponseEntity<String> testForgotPassword(@PathVariable String email) {
+		List<Investor> inv = investorDAO.findByInvestorEmail(email);
+		if(inv != null) {
+		    String randomPassword = investorService.generateRandomPassword(10);
+		    Investor investor = inv.get(0);
+		    investor.setInvestorPassword(randomPassword);
+		    investorDAO.save(investor);
+		    Users user = userRepository.findByUsername(email);
+		    user.setPassword(randomPassword);
+		    userRepository.save(user);
+		    investorService.sendEmail(email, randomPassword);
+		    return ResponseEntity.ok("Email sent successfully!");
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ERROR User Not Registered!");
+		}
+	}
+    
 }

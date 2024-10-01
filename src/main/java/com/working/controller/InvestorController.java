@@ -3,7 +3,9 @@ package com.working.controller;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -69,16 +71,16 @@ public class InvestorController {
 	}
 	
 	 @PostMapping("sell")
-	 public String sellBasket(@RequestBody Sell sell) {
+	 public ResponseEntity<String> sellBasket(@RequestBody Sell sell) {
 		 Investor investor = investorDAO.findById(sell.getInvestorId()).orElseThrow(() -> new RuntimeException("Investor not found"));
-	 Basket basket = basketDAO.findById(sell.getBasketId()).orElseThrow(() -> new RuntimeException("Basket not found"));
-	
-	 try {
-		 investorService.sellBasket(investor, basket, sell.getQuantity());
-	     return "Basket sold successfully.";
-	 } catch (Exception e) {
-		 return "Error: " + e.getMessage();
-	     }
+		 Basket basket = basketDAO.findById(sell.getBasketId()).orElseThrow(() -> new RuntimeException("Basket not found"));
+		
+		 try {
+			 investorService.sellBasket(investor, basket, sell.getQuantity());
+		     return ResponseEntity.ok("Basket Sold!");
+		 } catch (Exception e) {
+			 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Some ERROR Occured");
+		     }
 	 }
 		
 	@PostMapping("buy")
@@ -92,24 +94,24 @@ public class InvestorController {
 	}
 	
 	@GetMapping("viewAr")
-	public ResponseEntity<String> viewAr(Principal principal){
-		List<InvestorAndBasket> investorAndBasketList = (investorDAO.findByInvestorEmail(principal.getName())).get(0).getInvestorAndBasketList();
-		BigDecimal strikePrice = BigDecimal.ZERO;
-		BigDecimal currentPrice = BigDecimal.ZERO;
-		for (InvestorAndBasket investorAndBasket : investorAndBasketList) {
-			strikePrice = (strikePrice.add(investorAndBasket.getPriceBought())).multiply(new BigDecimal(investorAndBasket.getQuantity()));
-			currentPrice = currentPrice.add(investorAndBasket.getBasket().calculateBasketPrice()).multiply(new BigDecimal(investorAndBasket.getQuantity()));
-		}
-		BigDecimal absoluteReturn = currentPrice.subtract(strikePrice);
-		BigDecimal percentageReturn = absoluteReturn.divide(currentPrice, 4, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100));
-		String response;
-	    if (absoluteReturn.compareTo(BigDecimal.ZERO) < 0) {
-	        response = "Absolute Return: -" + absoluteReturn.abs() + ", Percentage Return: -" + percentageReturn.abs() + "%";
-	    } else {
-	        response = "Absolute Return: " + absoluteReturn + ", Percentage Return: " + percentageReturn + "%";
+	public ResponseEntity<Map<String, Object>> viewAr(Principal principal) {
+	    List<InvestorAndBasket> investorAndBasketList = investorDAO.findByInvestorEmail(principal.getName()).get(0).getInvestorAndBasketList();
+	    BigDecimal strikePrice = BigDecimal.ZERO;
+	    BigDecimal currentPrice = BigDecimal.ZERO;
+
+	    for (InvestorAndBasket investorAndBasket : investorAndBasketList) {
+	        strikePrice = strikePrice.add(investorAndBasket.getPriceBought()).multiply(new BigDecimal(investorAndBasket.getQuantity()));
+	        currentPrice = currentPrice.add(investorAndBasket.getBasket().calculateBasketPrice()).multiply(new BigDecimal(investorAndBasket.getQuantity()));
 	    }
+
+	    BigDecimal absoluteReturn = currentPrice.subtract(strikePrice);
+	    BigDecimal percentageReturn = absoluteReturn.divide(currentPrice, 4, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100));
+
+	    Map<String, Object> response = new HashMap<>();
+	    response.put("absoluteReturn", absoluteReturn);
+	    response.put("percentageReturn", percentageReturn);
+
 	    return new ResponseEntity<>(response, HttpStatus.OK);
 	}
-	
  
 }

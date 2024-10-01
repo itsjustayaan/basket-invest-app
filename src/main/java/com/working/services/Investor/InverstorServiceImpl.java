@@ -78,12 +78,12 @@ public class InverstorServiceImpl implements InvestorService{
 			Optional<Investor> investorTemp = investorDAO.findById(investor.getInvestorId());
 			if(investorTemp.get().getInvestorName().equals(investor.getInvestorName())) {
 				investorDAO.save(investor);
-				return new ResponseEntity<>("Investor with ID Updated",HttpStatus.CREATED);
+				 return ResponseEntity.status(HttpStatus.CREATED).body("Investor with ID Updated");
 			}
-			else
-			return new ResponseEntity<>("Illegal operation: Name Miss match",HttpStatus.NOT_ACCEPTABLE);
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Illegal operation: Name Miss match");
 		}
 	}
+	
 	
 	@Override
 	public ResponseEntity<String> deleteInvestor(int investorId){

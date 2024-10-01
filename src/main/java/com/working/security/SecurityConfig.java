@@ -33,6 +33,7 @@ public class SecurityConfig {
                 .requestMatchers("/investor/**").hasRole("INVESTOR")
                 .requestMatchers("/ia/**").hasRole("INVESTMENT_ADVISOR")
                 .requestMatchers("/forgetPass/**").permitAll()
+                .requestMatchers("/testForgetPass/**").permitAll()
                 .anyRequest().authenticated()
             )
             .httpBasic();

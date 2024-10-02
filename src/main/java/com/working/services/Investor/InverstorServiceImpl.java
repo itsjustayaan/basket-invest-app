@@ -150,7 +150,7 @@ public class InverstorServiceImpl implements InvestorService{
 	@Override
 	public ResponseEntity<String> updateInvestorBalance(int investorId, double balance) {
 		Investor inv = investorDAO.findById(investorId).get();
-		inv.setInvestorBalance(balance);
+		inv.setInvestorBalance(inv.getInvestorBalance()+balance);
 		investorDAO.save(inv);
 		return new ResponseEntity<>("Investor Balance Updated",HttpStatus.OK);
 	}

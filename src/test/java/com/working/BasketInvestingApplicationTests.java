@@ -53,22 +53,18 @@ class BasketInvestingApplicationTests {
     static void setup(@Autowired JdbcTemplate jdbcTemplate) {
         BasketInvestingApplicationTests.jdbcTemplate = jdbcTemplate;
 
-        // Clear tables to ensure a fresh state
         JdbcTestUtils.deleteFromTables(jdbcTemplate, "investor_and_basket", "basket_and_stock", "basket", "stock", "users", "authorities");
 
-        // Insert admin user and authority
         String insertUser = "INSERT INTO users (username, password, enabled) VALUES ('admin', 'admin', true)";
         jdbcTemplate.update(insertUser);
 
         String insertAuthority = "INSERT INTO authorities (username, authority) VALUES ('admin', 'ROLE_ADMIN')";
         jdbcTemplate.update(insertAuthority);
 
-        // Sample data for investors
         investor1 = new Investor("Alice Smith", "alice@example.com", "password1", 10000);
         investor2 = new Investor("Bob Johnson", "bob@example.com", "password2", 20000);
         investor3 = new Investor("Charlie Brown", "charlie@example.com", "password3", 30000);
 
-        // Sample data for investment advisors
         advisor1 = new InvestmentAdvisor("Jane Advisor", "jane@example.com", "password");
         advisor2 = new InvestmentAdvisor("Tom Advisor", "sura.mitraa@gmail.com", "password");
     }

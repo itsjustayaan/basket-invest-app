@@ -286,17 +286,17 @@ class BasketInvestingApplicationTests {
     }
 
 
-//    @AfterAll
-//    static void dropTables() {
-//        // Drop tables
-//        jdbcTemplate.execute("DROP TABLE IF EXISTS investor_and_basket");
-//        jdbcTemplate.execute("DROP TABLE IF EXISTS basket_and_stock");
-//        jdbcTemplate.execute("DROP TABLE IF EXISTS basket");
-//        jdbcTemplate.execute("DROP TABLE IF EXISTS stock");
-//        jdbcTemplate.execute("DROP TABLE IF EXISTS investment_advisor");
-//        jdbcTemplate.execute("DROP TABLE IF EXISTS investor");
-//        jdbcTemplate.execute("DROP TABLE IF EXISTS admins");
-//        jdbcTemplate.execute("DROP TABLE IF EXISTS authorities");
-//        jdbcTemplate.execute("DROP TABLE IF EXISTS users");
-//    }
+    @AfterAll
+    static void dropTables() {
+        // Drop tables
+        jdbcTemplate.execute("DROP TABLE IF EXISTS investor_and_basket");
+        jdbcTemplate.execute("DROP TABLE IF EXISTS basket_and_stock");
+        jdbcTemplate.execute("DROP TABLE IF EXISTS basket");
+        jdbcTemplate.execute("DROP TABLE IF EXISTS stock");
+        jdbcTemplate.execute("DROP TABLE IF EXISTS investment_advisor");
+        jdbcTemplate.execute("DROP TABLE IF EXISTS investor");
+        jdbcTemplate.execute("DROP TABLE IF EXISTS admins");
+        jdbcTemplate.execute("DROP TABLE IF EXISTS authorities");
+        jdbcTemplate.execute("DROP TABLE IF EXISTS users");
+    }
 }

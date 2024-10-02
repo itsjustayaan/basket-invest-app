@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.working.dao.InvestmentAdvisorDAO;
 import com.working.dao.UserRepository;
 import com.working.model.Basket;
-import com.working.model.BasketAndStock;
 import com.working.model.InvestmentAdvisor;
 import com.working.model.Investor;
 import com.working.model.Users;
@@ -54,9 +53,22 @@ public class InvestmentAdvisorController {
 		return investmentAdvisorService.updateInvestmentAdvisor(investmentAdvisor);
 	}
 	
+	@PutMapping("testUpdate")
+	public ResponseEntity<InvestmentAdvisor> updateInvestmentAdvisor(Principal principal,@RequestBody InvestmentAdvisor investmentAdvisor) {
+		investmentAdvisor.setIaId(investmentAdvisorDAO.findByIaEmail(principal.getName()).get(0).getIaId());
+	    return ResponseEntity.ok(investmentAdvisor);
+	}
+
+	
 	@PostMapping("createBasket")
-	public ResponseEntity<String> setBasket(@RequestBody Basket basket){
+	public ResponseEntity<String> setBasket(Principal principal, @RequestBody Basket basket){
+		basket.setIaId_ref(investmentAdvisorDAO.findByIaEmail(principal.getName()).get(0).getIaId());
 		return basketImpl.createBasket(basket);
+	}
+	
+	@PostMapping("testCreateBasket")
+	public ResponseEntity<String> setIaBasket(@RequestBody Basket basket){
+		return ResponseEntity.ok(basketImpl.createBasket(basket).toString());
 	}
 	
 	@GetMapping("/forgetPass/{email}")

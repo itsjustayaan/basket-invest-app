@@ -23,7 +23,6 @@ public class SecurityConfig {
         this.userDetailsService = userDetailsService;
     }
     
-    @SuppressWarnings("removal")
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -33,6 +32,7 @@ public class SecurityConfig {
                 .requestMatchers("/investor/**").hasRole("INVESTOR")
                 .requestMatchers("/ia/**").hasRole("INVESTMENT_ADVISOR")
                 .requestMatchers("/forgetPass/**").permitAll()
+                .requestMatchers("/testForgetPass/**").permitAll()
                 .anyRequest().authenticated()
             )
             .httpBasic();

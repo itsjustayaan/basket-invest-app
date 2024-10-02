@@ -3,8 +3,6 @@ package com.working.model;
 
 import java.util.List;
 
-import org.springframework.http.ResponseEntity;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,17 +23,18 @@ public class Investor {
 	@Column
 	private String investorName;
 	
-	@Column
+	@Column(unique=true)
 	private String investorEmail;
 	
 	@Column
 	private String investorPassword;
 	
 	@Column
-	private int investorBalance;
+	private double investorBalance;
 	
     @OneToMany(mappedBy = "investor", cascade = CascadeType.ALL)
     private List<InvestorAndBasket> investorAndBasketList;	
+    
 	public Investor() {
 		
 	}
@@ -47,6 +46,13 @@ public class Investor {
 		this.investorEmail = investorEmail;
 		this.investorPassword = investorPassword;
 		this.investorBalance = investorBalance;
+	}
+
+	public Investor(int investorId2, String string, String string2, String string3) {
+		this.investorId = investorId2;
+		this.investorName = string;
+		this.investorEmail = string2;
+		this.investorPassword = string3;
 	}
 
 	public int getInvestorId() {
@@ -81,11 +87,11 @@ public class Investor {
 		this.investorPassword = investorPassword;
 	}
 
-	public int getInvestorBalance() {
+	public double getInvestorBalance() {
 		return investorBalance;
 	}
 
-	public void setInvestorBalance(int investorBalance) {
+	public void setInvestorBalance(double investorBalance) {
 		this.investorBalance = investorBalance;
 	}
 	

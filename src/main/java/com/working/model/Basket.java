@@ -3,6 +3,8 @@ package com.working.model;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,6 +35,7 @@ public class Basket {
     private List<BasketAndStock> basketStockList;
   
     @OneToMany(mappedBy = "basket", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<InvestorAndBasket> investorAndBasketList;
     
     public Basket () {

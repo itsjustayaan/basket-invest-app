@@ -11,8 +11,8 @@ public interface InvestorService {
 	public ResponseEntity<String> createInvestor(Investor investor);
 	public ResponseEntity<String> updateInvestor(Investor investor);
 	public ResponseEntity<String> deleteInvestor(int investorId);
-	public ResponseEntity<String> updateInvestorBalance(int balance);
-	public ResponseEntity<String> getInvestorBalance(String investorName);
+	public ResponseEntity<String> updateInvestorBalance(int investorId, double balance);
+	public double getInvestorBalance(int investorId);
 	public ResponseEntity<List<Investor>> findAllInvestors();
 	public boolean ifExistsInvestor(int investorId);
 	public ResponseEntity<List<Investor>> findInvestor(String investorName);

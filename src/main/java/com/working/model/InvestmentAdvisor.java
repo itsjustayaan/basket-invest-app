@@ -16,7 +16,7 @@ public class InvestmentAdvisor {
 	@Column(nullable=false)
 	private String iaName;
 	
-	@Column(nullable=false)
+	@Column(nullable=false, unique=true)
 	private String iaEmail;
 	
 	@Column(nullable=false)
@@ -33,6 +33,14 @@ public class InvestmentAdvisor {
 		this.iaPassword = ia_Password;
 	}
 	
+	public InvestmentAdvisor(int iaId, String iaName, String iaEmail, String iaPassword) {
+	    this.iaId = iaId;
+	    this.iaName = iaName;
+	    this.iaEmail = iaEmail;
+	    this.iaPassword = iaPassword;
+	}
+
+
 	public String getIaName() {
 		return iaName;
 	}

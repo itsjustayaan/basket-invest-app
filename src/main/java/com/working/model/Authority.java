@@ -15,10 +15,10 @@ public class Authority {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column
     private String username;
 
-	@Column(nullable = false)
+	@Column
     private String authority;
 
     public Authority() {

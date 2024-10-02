@@ -6,5 +6,5 @@ import com.working.model.Authority;
 
 public interface AuthorityDAO extends JpaRepository<Authority, Long> {
 	public Authority findByUsername(String username);
-	public Authority deleteByUsername(String username);
+	public void deleteByUsername(String username);
 }

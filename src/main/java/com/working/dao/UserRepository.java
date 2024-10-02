@@ -8,5 +8,5 @@ import com.working.model.Users;
 @Repository
 public interface UserRepository extends JpaRepository<Users, Long> {
     public Users findByUsername(String username);
-    public Users deleteByUsername(String username);
+    public void deleteByUsername(String username);
 }

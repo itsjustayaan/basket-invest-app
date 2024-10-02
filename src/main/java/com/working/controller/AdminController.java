@@ -38,6 +38,7 @@ public class AdminController {
 	
 	@DeleteMapping("deleteAdvisor")
 	public ResponseEntity<String> deleteAdvisor(@RequestBody InvestmentAdvisor investmentAdvisor){
+		System.out.println(investmentAdvisor.getIaId());
 		return investmentAdvisorService.deleteInvestmentAdvisor(investmentAdvisor.getIaId());
 	}
 	

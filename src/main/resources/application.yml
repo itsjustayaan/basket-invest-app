@@ -31,7 +31,7 @@ spring:
     pathmatch:
       matching-strategy: ANT_PATH_MATCHER
 server:
-  port: 6969
+  port: 8080
 springdoc:
   api-docs:
     path: /v3/api-docs

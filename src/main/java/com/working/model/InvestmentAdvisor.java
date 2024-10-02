@@ -16,7 +16,7 @@ public class InvestmentAdvisor {
 	@Column(nullable=false)
 	private String iaName;
 	
-	@Column(nullable=false)
+	@Column(nullable=false, unique=true)
 	private String iaEmail;
 	
 	@Column(nullable=false)

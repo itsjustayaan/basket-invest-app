@@ -2,9 +2,12 @@ package com.working.model;
 
 
 
+import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -21,39 +24,49 @@ public class InvestorAndBasket {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int ibId;
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "investor_id")
+    @JsonIgnore
     private Investor investor;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "basket_id")
+    @JsonIgnore
     private Basket basket;
     
     @Column
     private int quantity;
-    
-//    @Column
-//    @Temporal(TemporalType.TIMESTAMP)
-//    private Date dateBought;
+
+	@Column(nullable = false)
+    private LocalDateTime purchaseDate;
 
     public InvestorAndBasket(){
-    	
+    	this.purchaseDate = LocalDateTime.now();
     }
     
     public InvestorAndBasket(Investor investor, Basket basket, int quantity) {
 		super();
 		this.investor = investor;
 		this.basket = basket;
-		this.quantity = quantity;
+		this.quantity = quantity;	
+		this.purchaseDate = LocalDateTime.now();
 	}
     
-    public int getId() {
-        return ibId;
-    }
+    public int getIbId() {
+		return ibId;
+	}
 
-	public void setId(int id) {
-        this.ibId = id;
-    }
+	public void setIbId(int ibId) {
+		this.ibId = ibId;
+	}
+
+	public LocalDateTime getPurchaseDate() {
+		return purchaseDate;
+	}
+
+	public void setPurchaseDate(LocalDateTime purchaseDate) {
+		this.purchaseDate = purchaseDate;
+	}
 
     public Investor getInvestor() {
         return investor;
@@ -78,12 +91,4 @@ public class InvestorAndBasket {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
-	
-//    public Date getDateBought() {
-//        return dateBought;
-//    }
-//
-//    public void setDateBought(Date dateBought) {
-//        this.dateBought = dateBought;
-//    }
 }

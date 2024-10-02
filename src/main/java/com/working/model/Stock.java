@@ -25,9 +25,6 @@ public class Stock {
 	@Column
 	private String stockPrice;
 	
-//	@ManyToMany(cascade=CascadeType.ALL, mappedBy="stockList")
-//	private List<Basket> basketList;
-	
 	public Stock() {
 		
 	}
@@ -39,7 +36,6 @@ public class Stock {
 		this.industry = industry;
 		this.stockSymbol = stockSymbol;
 		this.stockPrice = stockPrice;
-//		this.basketList = basketList;
 	}
 
 	public String getIsin() {

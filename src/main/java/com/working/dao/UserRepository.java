@@ -7,5 +7,6 @@ import com.working.model.Users;
 
 @Repository
 public interface UserRepository extends JpaRepository<Users, Long> {
-    Users findByUsername(String username);
+    public Users findByUsername(String username);
+    public Users deleteByUsername(String username);
 }

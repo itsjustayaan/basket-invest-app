@@ -4,7 +4,6 @@ import java.security.Principal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.working.dao.InvestmentAdvisorDAO;
 import com.working.model.Basket;
-import com.working.model.BasketAndStock;
 import com.working.model.InvestmentAdvisor;
 import com.working.services.Basket.BasketServiceImpl;
 import com.working.services.InvestmentAdvisor.InvestmentAdvisorService;
@@ -31,10 +29,6 @@ public class InvestmentAdvisorController {
 	@Autowired
 	BasketServiceImpl basketImpl;
 	
-	@PostMapping("create")
-	public ResponseEntity<String> createAdvisor(@RequestBody InvestmentAdvisor investmentAdvisor){
-		return investmentAdvisorService.createInvestmentAdvisor(investmentAdvisor);
-	}
 	@PutMapping("update")
 	public ResponseEntity<String> updateAdvisor(Principal principal,@RequestBody InvestmentAdvisor investmentAdvisor){
 		investmentAdvisor.setIaId(investmentAdvisorDAO.findByIaEmail(principal.getName()).get(0).getIaId());
@@ -42,8 +36,8 @@ public class InvestmentAdvisorController {
 	}
 	
 	@PostMapping("createBasket")
-	public ResponseEntity<String> setBasket(@RequestBody Basket basket){
+	public ResponseEntity<String> setBasket(Principal principal, @RequestBody Basket basket){
+		basket.setIaId_ref(investmentAdvisorDAO.findByIaEmail(principal.getName()).get(0).getIaId());
 		return basketImpl.createBasket(basket);
 	}
-	
 }

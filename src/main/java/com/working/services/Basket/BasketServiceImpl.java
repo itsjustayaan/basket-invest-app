@@ -29,20 +29,27 @@ public class BasketServiceImpl implements BasketService {
     @Override
     public ResponseEntity<String> createBasket(Basket basket) {
         List<BasketAndStock> basketStockList = basket.getBasketStockList();
-
-        for (BasketAndStock basketStock : basketStockList) {
-            Stock stock = stockDAO.findById(basketStock.getStock().getIsin()).orElseThrow(() -> new RuntimeException("Stock with ID " + basketStock.getStock().getStockName() + " not found"));
-            basketStock.setStock(stock);
-            basketStock.setBasket(basket);
+        
+        if(basketStockList != null) {
+        	for (BasketAndStock basketStock : basketStockList) {
+                Stock stock = stockDAO.findById(basketStock.getStock().getIsin()).orElseThrow(() -> new RuntimeException("Stock with ID " + basketStock.getStock().getStockName() + " not found"));
+                basketStock.setStock(stock);
+                basketStock.setBasket(basket);
+            }
         }
-
-        basketDAO.save(basket);
+        
+        try {
+        	basketDAO.save(basket);
+        } catch(Exception e) {
+        	return new ResponseEntity<>("Basket was not created", HttpStatus.BAD_REQUEST);
+        }
+        
         return new ResponseEntity<>("Basket and associated stocks created", HttpStatus.CREATED);
     }
 
-    @Override
-    public ResponseEntity<String> deleteBasket(int basketId) {
-        // Implement delete logic if necessary
-        return new ResponseEntity<>("Delete functionality is not yet implemented", HttpStatus.NOT_IMPLEMENTED);
-    }
+	@Override
+	public ResponseEntity<List<Basket>> findAllBasket() {
+		List<Basket> baskets = basketDAO.findAll();
+		return new ResponseEntity<>(baskets, HttpStatus.OK);
+	}
 }

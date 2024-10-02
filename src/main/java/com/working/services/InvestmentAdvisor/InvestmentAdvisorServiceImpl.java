@@ -13,11 +13,12 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import com.working.dao.AuthorityDAO;
 import com.working.dao.InvestmentAdvisorDAO;
 import com.working.dao.UserRepository;
-import com.working.model.Users;
 import com.working.model.Authority;
 import com.working.model.InvestmentAdvisor;
+import com.working.model.Users;
 
 @Service
 public class InvestmentAdvisorServiceImpl implements InvestmentAdvisorService{
@@ -30,7 +31,10 @@ public class InvestmentAdvisorServiceImpl implements InvestmentAdvisorService{
 	UserRepository userRepository;
 	
 	@Autowired
-    JavaMailSender javaMailSender;
+	AuthorityDAO authorityDAO;
+  
+  @Autowired
+  JavaMailSender javaMailSender;
 	
 	@Override
 	public ResponseEntity<String> createInvestmentAdvisor(InvestmentAdvisor investmentAdvisor) {
@@ -44,37 +48,51 @@ public class InvestmentAdvisorServiceImpl implements InvestmentAdvisorService{
 			return new ResponseEntity<>("Investment Advisor Password cannot be Empty",HttpStatus.NOT_ACCEPTABLE);
 		}
 		else if(investmentAdvisorDAO.findById(investmentAdvisor.getIaId()).orElse(null) != null) {
-			System.out.println((investmentAdvisorDAO.findById(investmentAdvisor.getIaId())));
 			return new ResponseEntity<>("Investment Advisor with this ID Exists",HttpStatus.CONFLICT);
 		}
 		else {
-			investmentAdvisorDAO.save(investmentAdvisor);
-		    Set<Authority> authorities = new HashSet<>();
-		    Authority authority = new Authority(investmentAdvisor.getIaEmail(),"ROLE_INVESTMENT_ADVISOR");
-		    authorities.add(authority);
-		    Users user = new Users(investmentAdvisor.getIaEmail(), investmentAdvisor.getIaPassword(), true, authorities);
-		    System.out.print(investmentAdvisor.getIaEmail() + investmentAdvisor.getIaPassword() + authorities);
-		    userRepository.save(user);
-			return new ResponseEntity<>("Investment Advisor ID Created",HttpStatus.CREATED);
+			try {
+				investmentAdvisorDAO.save(investmentAdvisor);
+				Set<Authority> authorities = new HashSet<>();
+			    Authority authority = new Authority(investmentAdvisor.getIaEmail(),"ROLE_INVESTMENT_ADVISOR");
+			    authorities.add(authority);
+			    Users user = new Users(investmentAdvisor.getIaEmail(), investmentAdvisor.getIaPassword(), true, authorities);
+			    userRepository.save(user);
+				return new ResponseEntity<>("Investment Advisor created",HttpStatus.CREATED);
+			} catch(Exception e) {
+				return new ResponseEntity<>("Investment Advisor could not be created",HttpStatus.BAD_REQUEST);
+			}
 		}
 	}
 
 	@Override
 	public ResponseEntity<String> updateInvestmentAdvisor(InvestmentAdvisor investmentAdvisor) {
-		if(investmentAdvisor.getIaId() <= 0) {
-			return new ResponseEntity<>("Investment Advisor ID cannot be negative",HttpStatus.NOT_ACCEPTABLE);
+		if(investmentAdvisor.getIaEmail() == "") {
+			return new ResponseEntity<>("Investment Advisor Email cannot be Empty",HttpStatus.NOT_ACCEPTABLE);
 		}
-		else if(investmentAdvisorDAO.findById(investmentAdvisor.getIaId()) == null) {
-			return new ResponseEntity<>("Investment Advisor with this ID doesn't exist",HttpStatus.CONFLICT);
+		else if(investmentAdvisor.getIaPassword() == "") {
+			return new ResponseEntity<>("Investment Advisor Password cannot be Empty",HttpStatus.NOT_ACCEPTABLE);
 		}
 		else {
 			Optional<InvestmentAdvisor> iaTemp = investmentAdvisorDAO.findById(investmentAdvisor.getIaId());
-			if(iaTemp.get().getIaName().equals(investmentAdvisor.getIaName())) {
-				investmentAdvisorDAO.save(investmentAdvisor);
-				return new ResponseEntity<>("Investment Advisor with ID Updated",HttpStatus.CREATED);
-			}
-			else
-			return new ResponseEntity<>("Illegal operation: Name Miss match",HttpStatus.NOT_ACCEPTABLE);
+			Users user = userRepository.findByUsername(iaTemp.get().getIaEmail());
+			Authority authority = authorityDAO.findByUsername(iaTemp.get().getIaEmail());
+			if(investmentAdvisor.getIaName()==null)
+				investmentAdvisor.setIaName(iaTemp.get().getIaName());
+			
+			if(investmentAdvisor.getIaEmail()==null)
+				investmentAdvisor.setIaEmail(iaTemp.get().getIaEmail());
+			
+			if(investmentAdvisor.getIaPassword()==null)
+				investmentAdvisor.setIaPassword(iaTemp.get().getIaPassword());
+				
+			investmentAdvisorDAO.save(investmentAdvisor);
+			user.setUsername(investmentAdvisor.getIaEmail());
+			user.setPassword(investmentAdvisor.getIaPassword());
+			authority.setUsername(investmentAdvisor.getIaEmail());
+			userRepository.save(user);
+			authorityDAO.save(authority);
+			return new ResponseEntity<>("Investment Advisor Updated",HttpStatus.OK);
 		}
 	}
 
@@ -82,6 +100,8 @@ public class InvestmentAdvisorServiceImpl implements InvestmentAdvisorService{
 	public ResponseEntity<String> deleteInvestmentAdvisor(int iaId) {
 		if(investmentAdvisorDAO.existsById(iaId)) {
 			investmentAdvisorDAO.deleteById(iaId);
+			userRepository.deleteByUsername(investmentAdvisorDAO.findById(iaId).get().getIaEmail());
+			authorityDAO.deleteByUsername(investmentAdvisorDAO.findById(iaId).get().getIaEmail());
 			return new ResponseEntity<>("Investor with this ID has been deleted",HttpStatus.OK);
 		}
 		return new ResponseEntity<>("Investor with this ID doesn't exist",HttpStatus.CONFLICT);
@@ -89,11 +109,11 @@ public class InvestmentAdvisorServiceImpl implements InvestmentAdvisorService{
 
 	@Override
 	public ResponseEntity<List<InvestmentAdvisor>> findAllInvestmentAdvisor() {
-		List<InvestmentAdvisor> allIa= (List<InvestmentAdvisor>) investmentAdvisorDAO.findAll();
+		List<InvestmentAdvisor> allIa = investmentAdvisorDAO.findAll();
 		if(allIa.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		}
-		return new ResponseEntity<>(allIa,HttpStatus.NOT_ACCEPTABLE);
+		return new ResponseEntity<>(allIa,HttpStatus.OK);
 	}
 
 	@Override

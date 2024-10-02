@@ -1,9 +1,11 @@
 package com.working.services.Investor;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.PriorityQueue;
 import java.util.Random;
 import java.util.Set;
 
@@ -14,6 +16,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import com.working.dao.AuthorityDAO;
 import com.working.dao.InvestorAndBasketDAO;
 import com.working.dao.InvestorDAO;
 import com.working.dao.UserRepository;
@@ -35,7 +38,10 @@ public class InverstorServiceImpl implements InvestorService{
 	UserRepository userRepository;
 	
 	@Autowired
-	InvestorAndBasketDAO investorAndBasketRepository;
+	AuthorityDAO authorityDAO;
+	
+	@Autowired
+	InvestorAndBasketDAO investorBasket;
 	
 	@Autowired
     JavaMailSender javaMailSender;
@@ -51,36 +57,58 @@ public class InverstorServiceImpl implements InvestorService{
 		else if(investor.getInvestorPassword() == "") {
 			return new ResponseEntity<>("Investor Password cannot be Empty",HttpStatus.NOT_ACCEPTABLE);
 		}
+		else if(investor.getInvestorBalance() < 0) {
+			return new ResponseEntity<>("Investor Balance cannot be negative",HttpStatus.NOT_ACCEPTABLE);
+		}
 		else if(investorDAO.findById(investor.getInvestorId()).orElse(null) != null) {
-			System.out.println((investorDAO.findById(investor.getInvestorId())));
-			return new ResponseEntity<>("Investorwith this ID Exists",HttpStatus.CONFLICT);
+			return new ResponseEntity<>("Investor with this ID Exists",HttpStatus.CONFLICT);
 		}
 		else {
-			investorDAO.save(investor);
-		    Set<Authority> authorities = new HashSet<>();
-		    Authority authority = new Authority(investor.getInvestorEmail(),"ROLE_INVESTOR");
-		    authorities.add(authority);
-		    Users user = new Users(investor.getInvestorEmail(), investor.getInvestorPassword(), true, authorities);
-		    userRepository.save(user);
-			return new ResponseEntity<>("Investor ID Created",HttpStatus.CREATED);
+			try {
+				investorDAO.save(investor);
+				Set<Authority> authorities = new HashSet<>();
+			    Authority authority = new Authority(investor.getInvestorEmail(),"ROLE_INVESTOR");
+			    authorities.add(authority);
+			    Users user = new Users(investor.getInvestorEmail(), investor.getInvestorPassword(), true, authorities);
+			    userRepository.save(user);
+				return new ResponseEntity<>("Investor created",HttpStatus.CREATED);
+			} catch(Exception e) {
+				return new ResponseEntity<>("Investor could not be created",HttpStatus.BAD_REQUEST);
+			}
 		}
 	}
 	
 	@Override
 	public ResponseEntity<String> updateInvestor(Investor investor){
-		if(investor.getInvestorId() <= 0) {
-			return new ResponseEntity<>("InvestorID cannot be negative",HttpStatus.NOT_ACCEPTABLE);
+		if(investor.getInvestorEmail() == "") {
+			return new ResponseEntity<>("Investment Advisor Email cannot be Empty",HttpStatus.NOT_ACCEPTABLE);
 		}
-		else if(investorDAO.findById(investor.getInvestorId()) == null) {
-			return new ResponseEntity<>("Investor with this ID doesn't exist",HttpStatus.CONFLICT);
+		else if(investor.getInvestorPassword() == "") {
+			return new ResponseEntity<>("Investment Advisor Password cannot be Empty",HttpStatus.NOT_ACCEPTABLE);
 		}
 		else {
-			Optional<Investor> investorTemp = investorDAO.findById(investor.getInvestorId());
-			if(investorTemp.get().getInvestorName().equals(investor.getInvestorName())) {
-				investorDAO.save(investor);
-				 return ResponseEntity.status(HttpStatus.CREATED).body("Investor with ID Updated");
-			}
-			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Illegal operation: Name Miss match");
+			Optional<Investor> iaTemp = investorDAO.findById(investor.getInvestorId());
+			Users user = userRepository.findByUsername(iaTemp.get().getInvestorEmail());
+			Authority authority = authorityDAO.findByUsername(iaTemp.get().getInvestorEmail());
+			if(investor.getInvestorName()==null)
+				investor.setInvestorName(iaTemp.get().getInvestorName());
+			
+			if(investor.getInvestorEmail()==null)
+				investor.setInvestorEmail(iaTemp.get().getInvestorEmail());
+			
+			if(investor.getInvestorPassword()==null)
+				investor.setInvestorPassword(iaTemp.get().getInvestorPassword());
+			
+			if(investor.getInvestorBalance()==0)
+				investor.setInvestorBalance(iaTemp.get().getInvestorBalance());
+				
+			investorDAO.save(investor);
+			user.setUsername(investor.getInvestorEmail());
+			user.setPassword(investor.getInvestorPassword());
+			authority.setUsername(investor.getInvestorEmail());
+			userRepository.save(user);
+			authorityDAO.save(authority);
+			return new ResponseEntity<>("Investor Updated",HttpStatus.OK);
 		}
 	}
 	
@@ -120,58 +148,71 @@ public class InverstorServiceImpl implements InvestorService{
 	}
 
 	@Override
-	public ResponseEntity<String> updateInvestorBalance(int balance) {
-		System.out.print(balance);
-		Investor inv = new Investor("Jay","gg@gmail.com","lessgoo",10);
-		investorDAO.save(inv);
+	public ResponseEntity<String> updateInvestorBalance(int investorId, double balance) {
+		Investor inv = investorDAO.findById(investorId).get();
 		inv.setInvestorBalance(balance);
 		investorDAO.save(inv);
-		return null;
+		return new ResponseEntity<>("Investor Balance Updated",HttpStatus.OK);
 	}
 	
-	 @Transactional
-	    public void sellBasket(Investor investor, Basket basket, int quantityToSell) throws Exception {
+	@Transactional
+	public void sellBasket(Investor investor, Basket basket, int quantityToSell) throws Exception {
 
-	        // Check if the investor owns the basket
-	        InvestorAndBasket investorAndBasket = investorAndBasketRepository.findByInvestorAndBasket(investor, basket);
-	        
-	        if (investorAndBasket == null) {
-	            throw new Exception("You don't own this basket. Short selling is not allowed.");
-	        }
+	    // Fetch all entries where the investor owns this basket (FIFO order by purchase date)
+	    PriorityQueue<InvestorAndBasket> basketQueue = new PriorityQueue<>(Comparator.comparing(InvestorAndBasket::getPurchaseDate));
+	    basketQueue.addAll(investorBasket.findByInvestorAndBasket(investor, basket));
 
-	        // Check if the quantity to sell is valid (no fractional selling)
-	        if (quantityToSell <= 0 || quantityToSell > investorAndBasket.getQuantity()) {
-	            throw new Exception("Invalid quantity. You can only sell whole baskets you own.");
-	        }
-
-	        // Calculate the price of the basket
-	        BigDecimal basketPrice = basket.calculateBasketPrice();
-
-	        // Update the investor's balance
-	        BigDecimal amountReceived = basketPrice.multiply(new BigDecimal(quantityToSell));
-	        investor.setInvestorBalance(investor.getInvestorBalance() + amountReceived.intValue());
-
-	        // Update the investor's basket quantity
-	        int remainingQuantity = investorAndBasket.getQuantity() - quantityToSell;
-	        if (remainingQuantity == 0) {
-	            // Remove the basket if the investor has sold all of their shares
-	            investorAndBasketRepository.delete(investorAndBasket);
-	        } else {
-	            investorAndBasket.setQuantity(remainingQuantity);
-	            investorAndBasketRepository.save(investorAndBasket);
-	        }
-
-	        investorDAO.save(investor);
+	    // If the investor doesn't own this basket at all
+	    if (basketQueue.isEmpty()) {
+	        throw new Exception("You don't own this basket. Short selling is not allowed.");
 	    }
 
+	    int remainingToSell = quantityToSell;
+	    BigDecimal totalAmountReceived = BigDecimal.ZERO;
+
+	    // Process the queue and sell the baskets based on the oldest purchases first
+	    while (!basketQueue.isEmpty() && remainingToSell > 0) {
+	        InvestorAndBasket currentBasket = basketQueue.poll(); // Get the oldest purchase
+
+	        // If the current basket entry has enough quantity to satisfy the sale
+	        if (currentBasket.getQuantity() >= remainingToSell) {
+	            BigDecimal basketPrice = basket.calculateBasketPrice();
+	            totalAmountReceived = totalAmountReceived.add(basketPrice.multiply(new BigDecimal(remainingToSell)));
+	            
+	            // Update the basket's quantity or remove if all sold
+	            if (currentBasket.getQuantity() == remainingToSell) {
+	                investorBasket.delete(currentBasket); // Remove entry if fully sold
+	            } else {
+	                currentBasket.setQuantity(currentBasket.getQuantity() - remainingToSell);
+	                investorBasket.save(currentBasket); // Update remaining quantity
+	            }
+	            remainingToSell = 0; // All requested baskets sold
+
+	        } else {
+	            // Sell whatever quantity is available in this entry
+	            BigDecimal basketPrice = basket.calculateBasketPrice();
+	            totalAmountReceived = totalAmountReceived.add(basketPrice.multiply(new BigDecimal(currentBasket.getQuantity())));
+
+	            remainingToSell -= currentBasket.getQuantity(); // Reduce remaining quantity to sell
+	            investorBasket.delete(currentBasket); // Remove fully sold basket
+	        }
+	    }
+
+	    // Check if there was enough quantity to satisfy the entire sell request
+	    if (remainingToSell > 0) {
+	        throw new Exception("Not enough quantity to sell. You own fewer baskets than requested.");
+	    }
+
+	    // Update the investor's balance with the total amount received
+	    investor.setInvestorBalance(investor.getInvestorBalance() + totalAmountReceived.doubleValue());
+	    investorDAO.save(investor);
+	}
+
 	 @Override
-	 public ResponseEntity<String> getInvestorBalance(String investorEmail) {
-	     List<Investor> investors = investorDAO.findByInvestorEmail(investorEmail);
-	     if (investors.isEmpty()) {
-	         return new ResponseEntity<>("Investor not found with email: " + investorEmail, HttpStatus.NOT_FOUND);
-	     }
-	     int balance = investors.get(0).getInvestorBalance();
-	     return new ResponseEntity<>("Investor balance: " + balance, HttpStatus.OK);
+	 public double getInvestorBalance(int investorId) {
+	     Investor investor = investorDAO.findById(investorId).get();
+	     double balance = investor.getInvestorBalance();
+	     return balance;
 	 }
 	 
 	 @Override

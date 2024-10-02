@@ -23,7 +23,6 @@ public class SecurityConfig {
         this.userDetailsService = userDetailsService;
     }
     
-    @SuppressWarnings("removal")
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http

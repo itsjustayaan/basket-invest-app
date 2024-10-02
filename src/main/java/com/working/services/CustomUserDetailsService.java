@@ -32,7 +32,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         Set<GrantedAuthority> authorities = user.getAuthorities().stream()
             .map(auth -> new SimpleGrantedAuthority(auth.getAuthority()))
             .collect(Collectors.toSet());
-        System.out.println(user.getPassword());
+//        System.out.println(user.getPassword());
 
         return new User(user.getUsername(),"{noop}"+user.getPassword(), user.isEnabled(), true, true, true, authorities);
     }

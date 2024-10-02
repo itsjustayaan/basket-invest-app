@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.working.dao.InvestmentAdvisorDAO;
 import com.working.dao.UserRepository;
 import com.working.model.Basket;
-import com.working.model.BasketAndStock;
 import com.working.model.InvestmentAdvisor;
 import com.working.model.Investor;
 import com.working.model.Users;
@@ -62,7 +61,8 @@ public class InvestmentAdvisorController {
 
 	
 	@PostMapping("createBasket")
-	public ResponseEntity<String> setBasket(@RequestBody Basket basket){
+	public ResponseEntity<String> setBasket(Principal principal, @RequestBody Basket basket){
+		basket.setIaId_ref(investmentAdvisorDAO.findByIaEmail(principal.getName()).get(0).getIaId());
 		return basketImpl.createBasket(basket);
 	}
 	

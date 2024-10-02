@@ -3,7 +3,6 @@ package com.working.controller;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.Principal;
-
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,7 +27,6 @@ import com.working.model.Investor;
 import com.working.model.InvestorAndBasket;
 import com.working.model.Sell;
 import com.working.services.Basket.BasketServiceImpl;
-import com.working.model.Users;
 import com.working.services.Investor.InvestorService;
 import com.working.services.investorAndBasket.InvestorBasketService;
 

@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.working.dao.BasketDAO;
+import com.working.dao.InvestorAndBasketDAO;
 import com.working.dao.InvestorDAO;
 import com.working.model.InvestorAndBasket;
 import com.working.services.Investor.InvestorService;
@@ -23,6 +24,9 @@ public class InvestorBasketServiceImpl implements InvestorBasketService {
 	
 	@Autowired
 	InvestorService investorService;
+	
+	@Autowired
+	InvestorAndBasketDAO investorBasket;
 
 	@Override
 	public ResponseEntity<String> buyBasket(InvestorAndBasket investBasket) {
@@ -31,6 +35,8 @@ public class InvestorBasketServiceImpl implements InvestorBasketService {
 		if(basketPrice.doubleValue() <= investorBalance) {
 			investorBalance -= basketPrice.doubleValue();
 			investBasket.getInvestor().setInvestorBalance(investorBalance);
+			investBasket.setPriceBought(basketPrice);
+			investorBasket.save(investBasket);
 			investorDAO.save(investBasket.getInvestor());
 			return new ResponseEntity<>("Basket Bought",HttpStatus.OK);
 		}

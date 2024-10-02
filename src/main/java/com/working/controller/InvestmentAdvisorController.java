@@ -18,7 +18,6 @@ import com.working.dao.InvestmentAdvisorDAO;
 import com.working.dao.UserRepository;
 import com.working.model.Basket;
 import com.working.model.InvestmentAdvisor;
-import com.working.model.Investor;
 import com.working.model.Users;
 import com.working.services.Basket.BasketServiceImpl;
 import com.working.services.InvestmentAdvisor.InvestmentAdvisorService;

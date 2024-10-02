@@ -11,4 +11,5 @@ import com.working.model.InvestorAndBasket;
 public interface InvestorAndBasketDAO extends JpaRepository<InvestorAndBasket,Integer> {
 	
 	 public List<InvestorAndBasket> findByInvestorAndBasket(Investor investor, Basket basket);
+	 public List<InvestorAndBasket> findByInvestor(Investor investor);
 }

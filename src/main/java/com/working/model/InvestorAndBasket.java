@@ -29,7 +29,6 @@ public class InvestorAndBasket {
 
     @ManyToOne
     @JoinColumn(name = "basket_id")
-    @JsonIgnore
     private Basket basket;
     
     @Column

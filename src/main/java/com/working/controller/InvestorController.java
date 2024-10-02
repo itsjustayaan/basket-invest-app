@@ -11,7 +11,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -19,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.working.dao.BasketDAO;
+import com.working.dao.InvestorAndBasketDAO;
 import com.working.dao.InvestorDAO;
 import com.working.dao.UserRepository;
 import com.working.model.Basket;
@@ -33,7 +34,7 @@ import com.working.services.investorAndBasket.InvestorBasketService;
 @RestController
 @RequestMapping("investor")
 public class InvestorController {
-	
+    
 	@Autowired
 	InvestorService investorService;
 	
@@ -45,6 +46,9 @@ public class InvestorController {
 	
 	@Autowired
 	InvestorBasketService investorAndBasket;
+	
+	@Autowired
+	InvestorAndBasketDAO investorAndBasketDAO;
 	
 	@Autowired
 	BasketServiceImpl basketService;
@@ -59,10 +63,10 @@ public class InvestorController {
 		return investorService.updateInvestor(investor);
 	}
 	
-	@DeleteMapping("delete")
-	public ResponseEntity<String> deleteInvestor(Principal principal){
-		return investorService.deleteInvestor(investorDAO.findByInvestorEmail(principal.getName()).get(0).getInvestorId());
-	}
+//	@DeleteMapping("delete")
+//	public ResponseEntity<String> deleteInvestor(Principal principal){
+//		return investorService.deleteInvestor(investorDAO.findByInvestorEmail(principal.getName()).get(0).getInvestorId());
+//	}
 	
 	@GetMapping("getAllBasket")
 	public ResponseEntity<List<Basket>> listAllBasket(){
@@ -88,10 +92,20 @@ public class InvestorController {
 	}
 	
 	@GetMapping("checkBalance")
-	public ResponseEntity<String> getBalance(Principal principal, @RequestBody Investor investor){
+	public ResponseEntity<String> getBalance(Principal principal){
 		double balance = investorService.getInvestorBalance(investorDAO.findByInvestorEmail(principal.getName()).get(0).getInvestorId());
 		return new ResponseEntity<>("Investor balance: " + balance, HttpStatus.OK);
 	}
+	
+	@GetMapping("myBaskets")
+	public ResponseEntity<Investor> myBaskets(Principal principal) {
+	    // Retrieve the investor based on the principal's name
+	    Investor investor = investorDAO.findByInvestorEmail(principal.getName()).get(0);
+	    
+	    // Return the list of baskets in JSON format
+	    return new ResponseEntity<>(investor, HttpStatus.OK);
+	}
+
 	
 	@PostMapping("sell")
 	public ResponseEntity<String> sellBasket(Principal principal, @RequestBody Sell sell) {
@@ -107,6 +121,7 @@ public class InvestorController {
 	 
 	 @PostMapping("buy")
 	 public ResponseEntity<String> setInvestorBasket(Principal principal, @RequestBody InvestorAndBasket investBasket){
+		 System.out.println(investBasket);
 		 Investor inv = investorDAO.findByInvestorEmail(principal.getName()).get(0);
 		 investBasket.setInvestor(inv);
 		 Basket bs = basketDAO.findById(investBasket.getBasket().getBasketId()).orElseThrow(() -> new RuntimeException("Basket not found"));

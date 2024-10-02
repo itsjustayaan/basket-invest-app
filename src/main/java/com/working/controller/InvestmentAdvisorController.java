@@ -42,10 +42,6 @@ public class InvestmentAdvisorController {
 	@Autowired
 	UserRepository userRepository;
 	
-	@PostMapping("create")
-	public ResponseEntity<String> createAdvisor(@RequestBody InvestmentAdvisor investmentAdvisor){
-		return investmentAdvisorService.createInvestmentAdvisor(investmentAdvisor);
-	}
 	@PutMapping("update")
 	public ResponseEntity<String> updateAdvisor(Principal principal,@RequestBody InvestmentAdvisor investmentAdvisor){
 		investmentAdvisor.setIaId(investmentAdvisorDAO.findByIaEmail(principal.getName()).get(0).getIaId());

@@ -1,14 +1,20 @@
 package com.working.controller;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.security.Principal;
+
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,11 +23,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.working.dao.BasketDAO;
 import com.working.dao.InvestorDAO;
+import com.working.dao.UserRepository;
 import com.working.model.Basket;
 import com.working.model.Investor;
 import com.working.model.InvestorAndBasket;
 import com.working.model.Sell;
 import com.working.services.Basket.BasketServiceImpl;
+import com.working.model.Users;
 import com.working.services.Investor.InvestorService;
 import com.working.services.investorAndBasket.InvestorBasketService;
 
@@ -34,7 +42,7 @@ public class InvestorController {
 	
 	@Autowired
 	InvestorDAO investorDAO;
-
+	
 	@Autowired
 	BasketDAO basketDAO;
 	
@@ -43,6 +51,9 @@ public class InvestorController {
 	
 	@Autowired
 	BasketServiceImpl basketService;
+	
+	@Autowired
+	UserRepository userRepository;
 	
 		
 	@PutMapping("update")
@@ -106,4 +117,25 @@ public class InvestorController {
 		 investBasket.setPurchaseDate(LocalDateTime.now());
 		 return investorAndBasket.buyBasket(investBasket);
 	 }
+
+	@GetMapping("viewAr")
+	public ResponseEntity<Map<String, Object>> viewAr(Principal principal) {
+	    List<InvestorAndBasket> investorAndBasketList = investorDAO.findByInvestorEmail(principal.getName()).get(0).getInvestorAndBasketList();
+	    BigDecimal strikePrice = BigDecimal.ZERO;
+	    BigDecimal currentPrice = BigDecimal.ZERO;
+
+	    for (InvestorAndBasket investorAndBasket : investorAndBasketList) {
+	        strikePrice = strikePrice.add(investorAndBasket.getPriceBought()).multiply(new BigDecimal(investorAndBasket.getQuantity()));
+	        currentPrice = currentPrice.add(investorAndBasket.getBasket().calculateBasketPrice()).multiply(new BigDecimal(investorAndBasket.getQuantity()));
+	    }
+
+	    BigDecimal absoluteReturn = currentPrice.subtract(strikePrice);
+	    BigDecimal percentageReturn = absoluteReturn.divide(currentPrice, 4, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100));
+
+	    Map<String, Object> response = new HashMap<>();
+	    response.put("absoluteReturn", absoluteReturn);
+	    response.put("percentageReturn", percentageReturn);
+
+	    return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 }

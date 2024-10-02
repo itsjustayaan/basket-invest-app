@@ -1,10 +1,8 @@
 package com.working.model;
 
-
-
 import java.time.LocalDateTime;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.math.BigDecimal;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -39,6 +37,9 @@ public class InvestorAndBasket {
 
 	@Column(nullable = false)
     private LocalDateTime purchaseDate;
+    
+    @Column
+    private BigDecimal priceBought;
 
     public InvestorAndBasket(){
     	this.purchaseDate = LocalDateTime.now();
@@ -56,17 +57,17 @@ public class InvestorAndBasket {
 		return ibId;
 	}
 
-	public void setIbId(int ibId) {
-		this.ibId = ibId;
-	}
+    public void setIbId(int ibId) {
+      this.ibId = ibId;
+    }
 
-	public LocalDateTime getPurchaseDate() {
-		return purchaseDate;
-	}
+    public LocalDateTime getPurchaseDate() {
+      return purchaseDate;
+    }
 
-	public void setPurchaseDate(LocalDateTime purchaseDate) {
-		this.purchaseDate = purchaseDate;
-	}
+    public void setPurchaseDate(LocalDateTime purchaseDate) {
+      this.purchaseDate = purchaseDate;
+    }
 
     public Investor getInvestor() {
         return investor;
@@ -84,11 +85,19 @@ public class InvestorAndBasket {
         this.basket = basket;
     }
 
-	public int getQuantity() {
-		return quantity;
-	}
+    public int getQuantity() {
+      return quantity;
+    }
 
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
-	}
+    public void setQuantity(int quantity) {
+      this.quantity = quantity;
+    }
+
+    public BigDecimal getPriceBought() {
+      return priceBought;
+    }
+
+    public void setPriceBought(BigDecimal priceBought) {
+      this.priceBought = priceBought;
+    }
 }

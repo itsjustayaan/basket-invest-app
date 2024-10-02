@@ -19,4 +19,6 @@ public interface InvestorService {
 	public ResponseEntity<List<Investor>> findByEmailInvestor(String investorEmail);
 	public boolean existsByEmail(String email); 
 	public void sellBasket(Investor investor, Basket basket, int quantityToSell)throws Exception;
+	public String generateRandomPassword(int length);
+	public void sendEmail(String to, String password);
 }

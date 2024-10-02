@@ -34,6 +34,7 @@ public class Investor {
 	
     @OneToMany(mappedBy = "investor", cascade = CascadeType.ALL)
     private List<InvestorAndBasket> investorAndBasketList;	
+    
 	public Investor() {
 		
 	}
@@ -45,6 +46,13 @@ public class Investor {
 		this.investorEmail = investorEmail;
 		this.investorPassword = investorPassword;
 		this.investorBalance = investorBalance;
+	}
+
+	public Investor(int investorId2, String string, String string2, String string3) {
+		this.investorId = investorId2;
+		this.investorName = string;
+		this.investorEmail = string2;
+		this.investorPassword = string3;
 	}
 
 	public int getInvestorId() {

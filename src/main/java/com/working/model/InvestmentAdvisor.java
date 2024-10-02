@@ -33,6 +33,14 @@ public class InvestmentAdvisor {
 		this.iaPassword = ia_Password;
 	}
 	
+	public InvestmentAdvisor(int iaId, String iaName, String iaEmail, String iaPassword) {
+	    this.iaId = iaId;
+	    this.iaName = iaName;
+	    this.iaEmail = iaEmail;
+	    this.iaPassword = iaPassword;
+	}
+
+
 	public String getIaName() {
 		return iaName;
 	}

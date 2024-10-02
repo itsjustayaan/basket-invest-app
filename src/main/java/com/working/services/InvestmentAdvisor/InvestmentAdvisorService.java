@@ -14,4 +14,6 @@ public interface InvestmentAdvisorService {
 	public boolean ifExistsInvestmentAdvisor(int iaId);
 	public ResponseEntity<List<InvestmentAdvisor>> findInvestmentAdvisor(String iaName);
 	public ResponseEntity<List<InvestmentAdvisor>> findByEmailInvestmentAdvisor(String iaEmail);
+	public String generateRandomPassword(int length);
+	public void sendEmail(String to, String password);
 }

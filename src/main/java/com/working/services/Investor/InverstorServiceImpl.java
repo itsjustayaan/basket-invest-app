@@ -6,11 +6,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.PriorityQueue;
+import java.util.Random;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import com.working.dao.AuthorityDAO;
@@ -39,6 +42,9 @@ public class InverstorServiceImpl implements InvestorService{
 	
 	@Autowired
 	InvestorAndBasketDAO investorBasket;
+	
+	@Autowired
+    JavaMailSender javaMailSender;
 	
 	@Override
 	public ResponseEntity<String> createInvestor(Investor investor){
@@ -105,6 +111,7 @@ public class InverstorServiceImpl implements InvestorService{
 			return new ResponseEntity<>("Investor Updated",HttpStatus.OK);
 		}
 	}
+	
 	
 	@Override
 	public ResponseEntity<String> deleteInvestor(int investorId){
@@ -206,6 +213,28 @@ public class InverstorServiceImpl implements InvestorService{
 	     Investor investor = investorDAO.findById(investorId).get();
 	     double balance = investor.getInvestorBalance();
 	     return balance;
+	 }
+	 
+	 @Override
+	 public String generateRandomPassword(int length) {
+	        Random random = new Random();
+	        StringBuilder password = new StringBuilder(length);
+	        for (int i = 0; i < length; i++) {
+	            int charType = random.nextInt(3);
+	            if (charType == 0) { password.append((char) ('0' + random.nextInt(10))); } 
+	            else if (charType == 1) { password.append((char) ('A' + random.nextInt(26))); } 
+	            else { password.append((char) ('a' + random.nextInt(26))); }
+	        }
+	        return password.toString();
+	 }
+	 
+	 @Override
+	 public void sendEmail(String to, String password) {
+	        SimpleMailMessage message = new SimpleMailMessage();
+	        message.setTo(to);
+	        message.setSubject("New Password for Login");
+	        message.setText("Your new password is: " + password +". Use this to login into your investor dashboard");
+	        javaMailSender.send(message);
 	 }
 }
 	

@@ -35,7 +35,7 @@ public class InvestorAndBasket {
     @Column
     private int quantity;
 
-	@Column(nullable = false)
+	@Column
     private LocalDateTime purchaseDate;
     
     @Column

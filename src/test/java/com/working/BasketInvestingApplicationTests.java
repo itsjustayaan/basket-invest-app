@@ -15,6 +15,8 @@ import com.working.dao.InvestorDAO;
 import com.working.model.InvestmentAdvisor;
 import com.working.model.Investor;
 
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -157,9 +159,8 @@ class BasketInvestingApplicationTests {
     @Test
     @Order(13)
     void testForgetPassword() throws Exception {
-        String email = advisor2.getIaEmail(); // Use the correct email from advisor2
-
-        mockMvc.perform(get("/testForgetPass/ia/" + email)) // Corrected the URL to include the email
+        String email = advisor2.getIaEmail();
+        mockMvc.perform(get("/testForgetPass/ia/" + email))
                 .andExpect(status().isOk());
     }
     
@@ -168,8 +169,8 @@ class BasketInvestingApplicationTests {
     void testUpdateInvestor() throws Exception {
         Investor existingInvestor = investorDAO.findByInvestorEmail(investor1.getInvestorEmail()).get(0);
         Investor updatedInvestor = new Investor(
-                existingInvestor.getInvestorId(), 
-                existingInvestor.getInvestorName(), // Use the existing name
+                existingInvestor.getInvestorId(),
+                existingInvestor.getInvestorName(),
                 "updated.email@example.com", 
                 "newpassword"
             );
@@ -178,7 +179,7 @@ class BasketInvestingApplicationTests {
                 .with(httpBasic(investorDAO.findByInvestorEmail(investor1.getInvestorEmail()).get(0).getInvestorEmail(), investorDAO.findByInvestorEmail(investor1.getInvestorEmail()).get(0).getInvestorPassword()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updatedInvestor)))
-                .andExpect(status().isCreated());
+                .andExpect(status().isOk());
     }
 
     
@@ -186,9 +187,9 @@ class BasketInvestingApplicationTests {
     @Order(15)
     void testUpdateInvestorBalance() throws Exception {
         // Prepare an updated balance object
-        Investor updatedBalanceInvestor = new Investor("Investor Name", "investor.email@example.com", "password", 20000);
-
-        mockMvc.perform(put("/investor/updateBalance")
+        Investor updatedBalanceInvestor = new Investor("Investor Name", "investor.email@example.com", "password", 20000.829);
+        investor1 = investorDAO.findByInvestorEmail("updated.email@example.com").get(0);
+        mockMvc.perform(put("/investor/addBalance")
                 .with(httpBasic(investor1.getInvestorEmail(), investor1.getInvestorPassword()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updatedBalanceInvestor)))
@@ -285,17 +286,17 @@ class BasketInvestingApplicationTests {
     }
 
 
-    @AfterAll
-    static void dropTables() {
-        // Drop tables
-        jdbcTemplate.execute("DROP TABLE IF EXISTS investor_and_basket");
-        jdbcTemplate.execute("DROP TABLE IF EXISTS basket_and_stock");
-        jdbcTemplate.execute("DROP TABLE IF EXISTS basket");
-        jdbcTemplate.execute("DROP TABLE IF EXISTS stock");
-        jdbcTemplate.execute("DROP TABLE IF EXISTS investment_advisor");
-        jdbcTemplate.execute("DROP TABLE IF EXISTS investor");
-        jdbcTemplate.execute("DROP TABLE IF EXISTS admins");
-        jdbcTemplate.execute("DROP TABLE IF EXISTS authorities");
-        jdbcTemplate.execute("DROP TABLE IF EXISTS users");
-    }
+//    @AfterAll
+//    static void dropTables() {
+//        // Drop tables
+//        jdbcTemplate.execute("DROP TABLE IF EXISTS investor_and_basket");
+//        jdbcTemplate.execute("DROP TABLE IF EXISTS basket_and_stock");
+//        jdbcTemplate.execute("DROP TABLE IF EXISTS basket");
+//        jdbcTemplate.execute("DROP TABLE IF EXISTS stock");
+//        jdbcTemplate.execute("DROP TABLE IF EXISTS investment_advisor");
+//        jdbcTemplate.execute("DROP TABLE IF EXISTS investor");
+//        jdbcTemplate.execute("DROP TABLE IF EXISTS admins");
+//        jdbcTemplate.execute("DROP TABLE IF EXISTS authorities");
+//        jdbcTemplate.execute("DROP TABLE IF EXISTS users");
+//    }
 }

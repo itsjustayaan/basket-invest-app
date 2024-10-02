@@ -40,7 +40,7 @@ public class Investor {
 	}
 	
 	public Investor(String investorName, String investorEmail, String investorPassword,
-			int investorBalance) {
+			double investorBalance) {
 		super();
 		this.investorName = investorName;
 		this.investorEmail = investorEmail;

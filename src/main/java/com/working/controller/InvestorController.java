@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.working.dao.BasketDAO;
 import com.working.dao.InvestorAndBasketDAO;
 import com.working.dao.InvestorDAO;
@@ -99,10 +98,7 @@ public class InvestorController {
 	
 	@GetMapping("myBaskets")
 	public ResponseEntity<Investor> myBaskets(Principal principal) {
-	    // Retrieve the investor based on the principal's name
 	    Investor investor = investorDAO.findByInvestorEmail(principal.getName()).get(0);
-	    
-	    // Return the list of baskets in JSON format
 	    return new ResponseEntity<>(investor, HttpStatus.OK);
 	}
 
